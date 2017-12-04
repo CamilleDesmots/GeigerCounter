@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./template.xhtml">
+            <ui:define name="title">GQ-GMC Geiger Counter</ui:define>
+            <ui:define name="box">
+                <h:panelGrid columns="2" style="margin-bottom:30px" cellpadding="5">
+                    <h:outputLabel>Emulation du compteur Geiger GQ-GMC :</h:outputLabel>
+                    <h:outputLabel>
+                        <c:choose>
+                            <c:when test="#{hardwareManager.emulation}">
+                                <h:outputLabel>Emulation du compteur</h:outputLabel>
+                            </c:when>
+                            <c:otherwise><h:outputLabel >Pas d'émulation</h:outputLabel></c:otherwise>
+                        </c:choose>
+                    </h:outputLabel>
+
+                    <h:outputLabel>Version du compteur Geiger :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.version}"/>
+
+                    <h:outputLabel>Révision :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.revision}"/>
+
+                    <h:outputLabel>Numéro de série du compteur :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.serialNumber}"/>
+
+                     <h:outputLabel>Voltage :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.voltage}"/>
+
+                      <h:outputLabel>Temperature :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.temp}"/>
+
+                   
+                    <h:outputLabel>Dernier CPS :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.CPS}"/>
+
+                    <h:outputLabel>Dernier CPM :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.CPM}"/>
+                </h:panelGrid>
+
+                <h:form>
+                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                        <!-- <h:outputLabel for="checkbox1">Counting every second CPM</h:outputLabel>
+                         <h:selectBooleanCheckbox id="checkbox1"  label="Counting every second CPM" value="#{hardwareManager.counting}"/>-->
+
+                        <h:outputLabel for="checkbox1">Emulation of GQ-GMC ?</h:outputLabel>
+                        <input type="checkbox"  name="checkbox1" value="#{hardwareManager.emulation}" checked="checked" />
+
+                    </h:panelGrid>
+                    <h:commandButton value="Submit" action="hardware.xhtml?i=2"/>
+                </h:form>
+          
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

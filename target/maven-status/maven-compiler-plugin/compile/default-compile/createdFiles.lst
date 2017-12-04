@@ -1,0 +1,5 @@
+org/geigercounter/geigercounter/GQGMC320.class
+org/geigercounter/geigercounter/HardwareManager.class
+org/geigercounter/geigercounter/GQGMCsim.class
+org/geigercounter/geigercounter/GQGMCSerialDataEventListener.class
+org/geigercounter/geigercounter/GQGMCInterface.class
