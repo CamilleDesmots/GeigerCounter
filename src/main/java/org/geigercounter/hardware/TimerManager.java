@@ -8,6 +8,7 @@ package org.geigercounter.hardware;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -22,7 +23,7 @@ public class TimerManager implements Serializable {
 
     private String lastProgrammaticTimeout;
     private String lastAutomaticTimeout;
-
+ 
     /** Creates a new instance of TimerManager */
     public TimerManager() {
         this.lastProgrammaticTimeout = "never";

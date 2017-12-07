@@ -15,22 +15,27 @@ import javax.ejb.Startup;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import javax.inject.Inject;
 
 /**
- * @author camilledesmots
- * Singletion that create a timer that ask for CPM every minutes
+ * @author camilledesmots Singletion that create a timer that ask for CPM every
+ * minutes
  */
 @Singleton
 @Startup
 public class TimerBean {
-       @Resource
+
+    @Resource
     TimerService timerService;
 
     private Date lastProgrammaticTimeout;
     private Date lastAutomaticTimeout;
+    private int lastCPM;
 
-    private static final Logger logger =
-            Logger.getLogger("timersession.ejb.TimerSessionBean");
+    private static final Logger logger = Logger.getLogger(TimerBean.class.getName());
+    
+       
+    @Inject HardwareManager hardwareManager;
 
     public void setTimer(long intervalDuration) {
         logger.log(Level.INFO,
@@ -51,7 +56,10 @@ public class TimerBean {
         this.setLastAutomaticTimeout(new Date());
         logger.info("Automatic timeout occurred");
         logger.info("Restart");
-        this.setTimer(0);
+        //TODO: Insert here the call to getCPM here 
+        this.lastCPM = hardwareManager.getCPM();
+        logger.log(Level.INFO, "Last CPM : {0} at {1}", new Object[]{this.lastCPM, this.getLastAutomaticTimeout()});
+        this.setTimer(8000);
     }
 
     /**
@@ -89,5 +97,5 @@ public class TimerBean {
     public void setLastAutomaticTimeout(Date lastAutomaticTimeout) {
         this.lastAutomaticTimeout = lastAutomaticTimeout;
     }
-    
+
 }

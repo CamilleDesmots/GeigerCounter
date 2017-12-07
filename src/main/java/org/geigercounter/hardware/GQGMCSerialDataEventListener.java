@@ -29,10 +29,12 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     private String tempText;
     private float volt;
     private LocalDateTime dateTime;
+    
+    private static final Logger logger = Logger.getLogger(Object.class.getName());
 
     @Override
     public void dataReceived(SerialDataEvent sde) {
-        Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.INFO, "In the method dataReceived() : [{0}]", this.commandName);
+        logger.log(Level.INFO, "In the method dataReceived() : [{0}]", this.commandName);
 
         try {
             switch (this.commandName) {
@@ -75,11 +77,11 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
                     break;
                 default:
                     this.tempText = sde.getHexByteString("", "", "");
-                    Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.WARNING, "Don''t know how to handle command ''{0}'' The HEXA response is [{1}]", new Object[]{this.commandName, this.tempText});
+                    logger.log(Level.WARNING, "Don''t know how to handle command ''{0}'' The HEXA response is [{1}]", new Object[]{this.commandName, this.tempText});
                     break;
             }
         } catch (IOException e) {
-            Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.SEVERE, null, e);
+            logger.log(Level.SEVERE, null, e);
         }
     }
 
@@ -92,7 +94,7 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     }
 
     public String getVersion() {
-        Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.INFO, "In the method getVersion() version :{0}", this.version);
+        logger.log(Level.INFO, "In the method getVersion() version :{0}", this.version);
 
         return this.version;
     }
@@ -102,7 +104,7 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     }
 
     public int getCPM() {
-        Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.INFO, "In the method getCPM() CPM : {0}", this.cpm);
+        logger.log(Level.INFO, "In the method getCPM() CPM : {0}", this.cpm);
         return this.cpm;
     }
 

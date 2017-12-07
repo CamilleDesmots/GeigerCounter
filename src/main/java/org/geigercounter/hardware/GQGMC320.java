@@ -33,11 +33,13 @@ public class GQGMC320 implements GQGMCInterface {
     private String serialNumber;
     private float voltage;
     private float temp;
+    
+    private static final Logger logger = Logger.getLogger(Object.class.getName());
 
     private GQGMCSerialDataEventListener sde;
 
     public GQGMC320(String newDevicePath) {
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method GQGMC320(String newDevicePath)");
+        logger.log(Level.INFO, "In the method GQGMC320(String newDevicePath)");
         this.heartBeatStatus = Boolean.FALSE;
         this.serialStatus = Boolean.FALSE;
         this.emulation = Boolean.FALSE;
@@ -55,22 +57,22 @@ public class GQGMC320 implements GQGMCInterface {
 
     @Override
     public void setSerialOpen() {
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method setSerialOpen()");
+        logger.log(Level.INFO, "In the method setSerialOpen()");
         serial = SerialFactory.createInstance();
         try {
             serial.open(config);
             serial.addListener(sde);
 
         } catch (IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method setSerialOpen()");
+        logger.log(Level.INFO, "End of the method setSerialOpen()");
 
     }
 
     @Override
     public String getVersion() {
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getVersion()");
+        logger.log(Level.INFO, "In the method getVersion()");
         try {
 
             this.commandName = "<GETVER>>";
@@ -79,18 +81,18 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getVersion()");
+        logger.log(Level.INFO, "End of the method getVersion()");
         this.version = sde.getVersion();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "this.Version()[{0}]", this.version);
+        logger.log(Level.INFO, "this.Version()[{0}]", this.version);
 
         return this.version;
     }
 
     @Override
     public String getSerialNumber() {
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getSerialNumber()");
+        logger.log(Level.INFO, "In the method getSerialNumber()");
         try {
 
             this.commandName = "<GETSERIAL>>";
@@ -99,18 +101,18 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getSerialNumber()");
+        logger.log(Level.INFO, "End of the method getSerialNumber()");
         this.serialNumber = sde.getSerialNumber();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "SerialNumber[{0}]", this.serialNumber);
+        logger.log(Level.INFO, "SerialNumber[{0}]", this.serialNumber);
 
         return this.serialNumber;
     }
 
     @Override
     public float getVoltage() {
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getVoltage())");
+        logger.log(Level.INFO, "In the method getVoltage())");
         try {
 
             this.commandName = "<GETVOLT>>";
@@ -119,11 +121,11 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getVoltage()");
+        logger.log(Level.INFO, "End of the method getVoltage()");
         this.serialNumber = sde.getSerialNumber();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "Voltage [{0}]", this.voltage);
+        logger.log(Level.INFO, "Voltage [{0}]", this.voltage);
 
         return this.voltage;
     }
@@ -188,10 +190,10 @@ public class GQGMC320 implements GQGMCInterface {
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         this.cpm = sde.getCPM();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "CPM [{0}]", this.cpm);
+        logger.log(Level.INFO, "CPM [{0}]", this.cpm);
         return this.cpm;
     }
 
@@ -203,10 +205,10 @@ public class GQGMC320 implements GQGMCInterface {
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         this.cps = sde.getCPS();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "CPS [{0}]", this.cps);
+        logger.log(Level.INFO, "CPS [{0}]", this.cps);
         return this.cps;
 
     }
@@ -239,10 +241,10 @@ public class GQGMC320 implements GQGMCInterface {
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         this.temp = sde.getTemp();
-        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "temp [{0}]", this.temp);
+        logger.log(Level.INFO, "temp [{0}]", this.temp);
         return this.temp;
 
     }
