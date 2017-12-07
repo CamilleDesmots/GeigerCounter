@@ -16,20 +16,20 @@ import java.util.logging.Logger;
  */
 public class GQGMCsim implements GQGMCInterface {
 
-    private String version ;
-    private String model ;
+    private String version;
+    private String model;
     private String revision;
     private String serialNumber;
-    private Random rand ;
-    private boolean emulation ;
+    private Random rand;
+    private boolean emulation;
     private String devicePath;
     private int idleTime;
     private float temp;
-    
-    public GQGMCsim(String newDevicePath){
+
+    public GQGMCsim(String newDevicePath) {
         Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "In the method GQGMCsim()");
         this.devicePath = newDevicePath;
-        this.version =  "GQsim Re 1.01";
+        this.version = "GQsim Re 1.01";
         this.model = "GQSim";
         this.revision = "Re 1.01";
         this.serialNumber = "FF,AA,00,FF,AA,00,FF";
@@ -39,13 +39,8 @@ public class GQGMCsim implements GQGMCInterface {
     }
 
     @Override
-    public String getModelNumber() {
-        return this.model;
-    }
-
-    @Override
-    public String getRevision() {
-        return this.revision;
+    public void setSerialOpen() {
+        Logger.getLogger(GQGMCsim.class.getName()).log(Level.INFO, "In the method setSerialOpen()");
     }
 
     @Override
@@ -59,24 +54,10 @@ public class GQGMCsim implements GQGMCInterface {
     }
 
     @Override
-    public int getCPM() {
-        // Retourne a value between [0 ... 65536[
-        Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "In the method getCPM()");
-        return rand.nextInt(65536);
-
-    }
-
-    @Override
-    public int getCPS() {
-        // Return a value cbetween [0 ... 65536[
-        Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "In the method getCPS()");
-        return rand.nextInt(65536);
-
-    }
-
-    @Override
     public float getVoltage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // GQ-GMC320 return a single byte for voltage with one decimal
+        this.temp = rand.nextInt(255) / 10;
+        return this.temp;
     }
 
     @Override
@@ -105,34 +86,72 @@ public class GQGMCsim implements GQGMCInterface {
     }
 
     @Override
+    public String getModelNumber() {
+        return this.model;
+    }
+
+    @Override
+    public String getRevision() {
+        return this.revision;
+    }
+
+    @Override
+    public int getCPM() {
+        // GQ-GMC320 return CPM on two bytes but only the lSB14 bites are used.   
+        Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "In the method getCPM()");
+        // In theory we could have this :  
+        // return rand.nextInt(16383);
+        // In the reality we could have this :  
+        return rand.nextInt(60);        
+        
+    }
+
+    @Override
+    public int getCPS() {
+        // Same remarks as for getCPM
+        Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "In the method getCPS()");
+        // In theory we could have this :  
+        // return rand.nextInt(16383);
+        // In the reality we could have this :  
+        return rand.nextInt(6);        
+
+    }
+
+    @Override
     public boolean getSerialStatus() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setSerialOpen(){
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
-    }
-    
-    @Override
     public boolean isEmulation() {
         return this.emulation;
-  
+
     }
-    
+
+    /**
+     *
+     * @return The idle time in milliseconds before retrieving the answer of a request to the serial port
+     */
     @Override
-    public int getIdleTime(){
+    public int getIdleTime() {
         return this.idleTime;
     }
-      @Override
-    public void setIdleTime(int newIdleTime){
+
+    @Override
+    public void setIdleTime(int newIdleTime) {
         this.idleTime = newIdleTime;
     }
-    
+
+    /**
+     *
+     * @return The temperature in °c
+     */
     @Override
-    public float getTemp(){
-        this.temp = rand.nextInt(4095)/10;
+    public float getTemp() {
+        // In theory : 
+        // this.temp = rand.nextInt(4095) / 10;
+        // For realism
+        this.temp = rand.nextInt(500) / 10;        
         return this.temp;
     }
 }

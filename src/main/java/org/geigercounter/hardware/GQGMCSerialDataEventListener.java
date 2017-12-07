@@ -41,7 +41,6 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
                     break;
                 case "<GETSERIAL>>":
                     this.serialNumber = sde.getHexByteString();
-
                     break;
                 case "<GETCPM>>":
                     this.cpm = Integer.parseInt(sde.getHexByteString("", "", ""), 16);
@@ -75,18 +74,13 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
                     );
                     break;
                 default:
-
-                    Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.WARNING, "Nothing planed for this data HEX DATA [" + sde.getHexByteString() + "]");
-                    Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.WARNING, "Nothing planed for this data ASCII DATA [" + sde.getAsciiString() + "]");
-
+                    this.tempText = sde.getHexByteString("", "", "");
+                    Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.WARNING, "Don''t know how to handle command ''{0}'' The HEXA response is [{1}]", new Object[]{this.commandName, this.tempText});
                     break;
-
             }
-
         } catch (IOException e) {
             Logger.getLogger(GQGMCSerialDataEventListener.class.getName()).log(Level.SEVERE, null, e);
         }
-
     }
 
     public void setCommanName(String newCommandName) {
@@ -127,5 +121,4 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     public LocalDateTime getDateTime() {
         return this.dateTime;
     }
-
 }

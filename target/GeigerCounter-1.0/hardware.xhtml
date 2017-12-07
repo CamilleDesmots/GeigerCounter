@@ -15,51 +15,80 @@ and open the template in the editor.
             <ui:define name="title">GQ-GMC Geiger Counter</ui:define>
             <ui:define name="box">
                 <h:panelGrid columns="2" style="margin-bottom:30px" cellpadding="5">
-                    <h:outputLabel>Emulation du compteur Geiger GQ-GMC :</h:outputLabel>
+                    <h:outputLabel>Emulation of GQ-GMC320 ?</h:outputLabel>
                     <h:outputLabel>
                         <c:choose>
                             <c:when test="#{hardwareManager.emulation}">
-                                <h:outputLabel>Emulation du compteur</h:outputLabel>
+                                <h:outputLabel>Yes</h:outputLabel>
                             </c:when>
-                            <c:otherwise><h:outputLabel >Pas d'émulation</h:outputLabel></c:otherwise>
+                            <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
+                        </c:choose>
+                    </h:outputLabel>
+                    <h:outputLabel>Coutning CPM every minutes is running ?</h:outputLabel>
+                    <h:outputLabel>
+                        <c:choose>
+                            <c:when test="#{hardwareManager.countingCPM}">
+                                <h:outputLabel>Yes</h:outputLabel>
+                            </c:when>
+                            <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
                         </c:choose>
                     </h:outputLabel>
 
-                    <h:outputLabel>Version du compteur Geiger :</h:outputLabel>
+
+                    <h:outputLabel>Version :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.version}"/>
 
-                    <h:outputLabel>Révision :</h:outputLabel>
+                    <h:outputLabel>Revision :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.revision}"/>
 
-                    <h:outputLabel>Numéro de série du compteur :</h:outputLabel>
+                    <h:outputLabel>Serial number :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.serialNumber}"/>
 
-                     <h:outputLabel>Voltage :</h:outputLabel>
+                    <h:outputLabel>Voltage :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.voltage}"/>
 
-                      <h:outputLabel>Temperature :</h:outputLabel>
+                    <h:outputLabel>Temperature :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.temp}"/>
 
-                   
-                    <h:outputLabel>Dernier CPS :</h:outputLabel>
+
+                    <h:outputLabel>Last CPS :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.CPS}"/>
 
-                    <h:outputLabel>Dernier CPM :</h:outputLabel>
+                    <h:outputLabel>Last CPM :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.CPM}"/>
+
+                    <h:outputLabel>The last programmatic timeout was:</h:outputLabel>
+                    <h:outputLabel>#{timerManager.lastProgrammaticTimeout}</h:outputLabel>
+
+                    <h:outputLabel>The last automatic timeout was:</h:outputLabel>
+                    <h:outputLabel>#{timerManager.lastAutomaticTimeout}</h:outputLabel>
+                       
                 </h:panelGrid>
 
                 <h:form>
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
                         <!-- <h:outputLabel for="checkbox1">Counting every second CPM</h:outputLabel>
                          <h:selectBooleanCheckbox id="checkbox1"  label="Counting every second CPM" value="#{hardwareManager.counting}"/>-->
-
-                        <h:outputLabel for="checkbox1">Emulation of GQ-GMC ?</h:outputLabel>
-                        <input type="checkbox"  name="checkbox1" value="#{hardwareManager.emulation}" checked="checked" />
-
                     </h:panelGrid>
-                    <h:commandButton value="Submit" action="hardware.xhtml?i=2"/>
+                    <h:commandButton value="Refresh" action="hardware.xhtml?i=2" />
                 </h:form>
-          
+                <h:form>
+                    <c:choose>
+                        <c:when test="#{hardwareManager.countingCPM == FALSE}">
+                            <h:commandButton value="Stop CPM every minutes" actionListener="#{hardwareManager.setCountingCPM(false)}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <h:commandButton value="Start CPM every minutes"  actionListener="#{hardwareManager.setCountingCPM(true)}" />
+                        </c:otherwise>
+                    </c:choose>
+
+                </h:form>
+
+                <h:form>
+                    <h:commandButton value="Start Timer" action="#{timerManager.setTimer}" />
+                    <h:commandButton value="Refresh" action="hardware.xhtml?i=2"/>
+                </h:form>
+
             </ui:define>
 
         </ui:composition>

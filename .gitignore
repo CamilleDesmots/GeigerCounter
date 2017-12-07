@@ -1,0 +1,8 @@
+*.class
+*.lst
+.DS_Store
+.svn
+*.lst
+*.svn-work
+*.lst
+target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst

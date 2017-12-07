@@ -42,7 +42,7 @@ public class GQGMC320 implements GQGMCInterface {
         this.serialStatus = Boolean.FALSE;
         this.emulation = Boolean.FALSE;
         this.idleTime = 310;
-this.devicePath = newDevicePath;
+        this.devicePath = newDevicePath;
         config = new SerialConfig();
         config.device(devicePath)
                 .baud(Baud._115200)
@@ -83,14 +83,14 @@ this.devicePath = newDevicePath;
         }
         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getVersion()");
         this.version = sde.getVersion();
-         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "this.Version()[{0}]", this.version);
-       
+        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "this.Version()[{0}]", this.version);
+
         return this.version;
     }
 
     @Override
     public String getSerialNumber() {
-                Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getSerialNumber()");
+        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getSerialNumber()");
         try {
 
             this.commandName = "<GETSERIAL>>";
@@ -104,13 +104,13 @@ this.devicePath = newDevicePath;
         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getSerialNumber()");
         this.serialNumber = sde.getSerialNumber();
         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "SerialNumber[{0}]", this.serialNumber);
-    
+
         return this.serialNumber;
-}
+    }
 
     @Override
     public float getVoltage() {
-             Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getVoltage())");
+        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "In the method getVoltage())");
         try {
 
             this.commandName = "<GETVOLT>>";
@@ -124,7 +124,7 @@ this.devicePath = newDevicePath;
         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "End of the method getVoltage()");
         this.serialNumber = sde.getSerialNumber();
         Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "Voltage [{0}]", this.voltage);
-    
+
         return this.voltage;
     }
 
@@ -206,9 +206,9 @@ this.devicePath = newDevicePath;
             Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.cps = sde.getCPS();
-           Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "CPS [{0}]", this.cps);
-     return this.cps;
-        
+        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "CPS [{0}]", this.cps);
+        return this.cps;
+
     }
 
     @Override
@@ -222,17 +222,16 @@ this.devicePath = newDevicePath;
     }
 
     @Override
-    public int getIdleTime(){
+    public int getIdleTime() {
         return this.idleTime;
     }
-    
-    @Override 
-    public void setIdleTime(int newIdleTime){
+
+    @Override
+    public void setIdleTime(int newIdleTime) {
         this.idleTime = newIdleTime;
     }
-            
-    
-     @Override
+
+    @Override
     public float getTemp() {
         try {
             this.commandName = "<GETTEMP>>";
@@ -243,9 +242,9 @@ this.devicePath = newDevicePath;
             Logger.getLogger(GQGMC320.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.temp = sde.getTemp();
-           Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "temp [{0}]", this.temp);
-     return this.temp;
-        
+        Logger.getLogger(GQGMC320.class.getName()).log(Level.INFO, "temp [{0}]", this.temp);
+        return this.temp;
+
     }
-    
-}   
+
+}
