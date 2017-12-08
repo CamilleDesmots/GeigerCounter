@@ -22,7 +22,7 @@ import javax.inject.Inject;
  * minutes
  */
 @Singleton
-@Startup
+@Startup // Désactivé temporairement
 public class TimerBean {
 
     @Resource
@@ -55,11 +55,15 @@ public class TimerBean {
     public void automaticTimeout() {
         this.setLastAutomaticTimeout(new Date());
         logger.info("Automatic timeout occurred");
-        logger.info("Restart");
-        //TODO: Insert here the call to getCPM here 
-        this.lastCPM = hardwareManager.getCPM();
-        logger.log(Level.INFO, "Last CPM : {0} at {1}", new Object[]{this.lastCPM, this.getLastAutomaticTimeout()});
-        this.setTimer(8000);
+        
+        if (hardwareManager.isCountingCPM()){
+            logger.info("Restart");
+            //TODO: Insert here the call to getCPM here 
+            this.lastCPM = hardwareManager.getCPM();
+            logger.log(Level.INFO, "Last CPM : {0} at {1}", new Object[]{this.lastCPM, this.getLastAutomaticTimeout()});
+            this.setTimer(8000);
+        }
+        
     }
 
     /**

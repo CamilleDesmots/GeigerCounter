@@ -2,8 +2,7 @@
 *.lst
 .DS_Store
 .svn
+.svn-work
 *.lst
-*.svn-work
-*.lst
-target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+*.log
 /target/
