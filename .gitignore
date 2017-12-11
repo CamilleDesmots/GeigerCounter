@@ -8,3 +8,4 @@
 target/
 *.jar
 *.war
+target/GeigerCounter-1.0.war
