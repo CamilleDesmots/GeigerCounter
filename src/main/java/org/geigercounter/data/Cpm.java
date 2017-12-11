@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cdesmots-ext
  */
 @Entity
-@Table(name = "CPM", catalog = "", schema = "GEIGERCOUNTER")
+@Table(name = "CPM", catalog = "", schema = "DATA")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cpm.findAll", query = "SELECT c FROM Cpm c")

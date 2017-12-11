@@ -13,6 +13,8 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -43,6 +45,9 @@ public class HardwareManager implements Serializable {
     // GQ-GMC320
     //@Inject GQGMC320 myGQGMC320;
     //private final GQGMC320 myGQGMC320;
+    
+    @PersistenceContext
+    EntityManager em;
 
 
     public HardwareManager() {
@@ -69,6 +74,10 @@ public class HardwareManager implements Serializable {
         myGQGMC.setSerialOpen();
         this.version = myGQGMC.getVersion();
         logger.log(Level.INFO, "this.version) [{0}]", this.version);
+        
+        // We have to check if this hardware is already in the database
+       
+        
     }
 
         /**

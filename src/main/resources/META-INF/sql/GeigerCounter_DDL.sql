@@ -10,7 +10,7 @@
 -- Instructions DDL pour les sch�mas
 -- ----------------------------------------------
 
-DROP SCHEMA  "DATA";
+DROP SCHEMA  "DATA" RESTRICT;
 CREATE SCHEMA "DATA";
 
 -- ----------------------------------------------

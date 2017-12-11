@@ -5,4 +5,6 @@
 .svn-work
 *.lst
 *.log
-/target/
+target/
+*.jar
+*.war
