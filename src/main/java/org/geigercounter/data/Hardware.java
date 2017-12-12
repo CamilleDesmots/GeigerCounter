@@ -28,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Hardware.findAll", query = "SELECT h FROM Hardware h")
     , @NamedQuery(name = "Hardware.findByHardwareid", query = "SELECT h FROM Hardware h WHERE h.hardwareid = :hardwareid")
     , @NamedQuery(name = "Hardware.findByVersion", query = "SELECT h FROM Hardware h WHERE h.version = :version")
-    , @NamedQuery(name = "Hardware.findBySerialnumber", query = "SELECT h FROM Hardware h WHERE h.serialnumber = :serialnumber")})
+    , @NamedQuery(name = "Hardware.findBySerialnumber", query = "SELECT h FROM Hardware h WHERE h.serialnumber = :serialnumber")
+    // Added by Camille Desmots :
+    , @NamedQuery(name = "Hardware.findBySerialnumberAndVersion", query = "SELECT h FROM Hardware h WHERE h.serialnumber = :serialnumber and h.version = :version")})
 public class Hardware implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,6 +51,11 @@ public class Hardware implements Serializable {
 
     public Hardware(Short hardwareid) {
         this.hardwareid = hardwareid;
+    }
+    
+    public Hardware(String version, String serialnumber) {
+        this.version = version;
+        this.serialnumber = serialnumber;
     }
 
     public Short getHardwareid() {

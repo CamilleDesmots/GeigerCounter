@@ -6,3 +6,4 @@
 *.lst
 *.log
 /target/
+/lib/

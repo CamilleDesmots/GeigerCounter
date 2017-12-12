@@ -13,6 +13,9 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import org.geigercounter.data.Hardware;
 
 /**
  *
@@ -35,6 +38,7 @@ public class HardwareManager implements Serializable {
     private int cps;
     private String version;
     private String revision;
+    private String serialNumber;
     private boolean countingCPM;
     
     private static final Logger logger = Logger.getLogger(Object.class.getName());
@@ -43,6 +47,9 @@ public class HardwareManager implements Serializable {
     // GQ-GMC320
     //@Inject GQGMC320 myGQGMC320;
     //private final GQGMC320 myGQGMC320;
+    
+    @PersistenceContext
+    EntityManager em;
 
 
     public HardwareManager() {
@@ -67,8 +74,19 @@ public class HardwareManager implements Serializable {
          */
 
         myGQGMC.setSerialOpen();
+        
         this.version = myGQGMC.getVersion();
         logger.log(Level.INFO, "this.version) [{0}]", this.version);
+        
+        this.serialNumber = myGQGMC.getSerialNumber();
+        logger.log(Level.INFO, "this.serialNumber) [{0}]", this.serialNumber);        
+        
+        // Creation of this hardware in the database if necessary
+        Hardware newHardware = new Hardware();
+        newHardware.setSerialnumber(this.version);
+        newHardware.setSerialnumber(this.serialNumber);
+        
+        
     }
 
         /**
