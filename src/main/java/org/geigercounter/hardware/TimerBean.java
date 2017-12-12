@@ -16,6 +16,8 @@ import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * @author camilledesmots Singletion that create a timer that ask for CPM every
@@ -33,10 +35,9 @@ public class TimerBean {
     private int lastCPM;
 
     private static final Logger logger = Logger.getLogger(TimerBean.class.getName());
-    
-       
-    @Inject HardwareManager hardwareManager;
-
+     
+   @Inject HardwareManager hardwareManager;
+   
     public void setTimer(long intervalDuration) {
         logger.log(Level.INFO,
                 "Setting a programmatic timeout for {0} milliseconds from now.",
@@ -56,13 +57,15 @@ public class TimerBean {
         this.setLastAutomaticTimeout(new Date());
         logger.info("Automatic timeout occurred");
         
-        if (hardwareManager.isCountingCPM()){
+        
+        if (hardwareManager.getCountingCPM() == Boolean.FALSE){
             logger.info("Restart");
             //TODO: Insert here the call to getCPM here 
             this.lastCPM = hardwareManager.getCPM();
             logger.log(Level.INFO, "Last CPM : {0} at {1}", new Object[]{this.lastCPM, this.getLastAutomaticTimeout()});
             this.setTimer(8000);
         }
+        
         
     }
 
