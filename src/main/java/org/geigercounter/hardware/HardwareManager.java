@@ -144,9 +144,28 @@ public class HardwareManager implements Serializable {
      *
      * @param topCounting TRUE for turning on the loop for counting CPM every minutes
      */
-    public void setCountingCPM(boolean topCounting) throws InterruptedException {
-        this.countingCPM = topCounting;
-        logger.log(Level.INFO, "In the method setCountingCPM({0})", this.countingCPM);
+    public void setCountingCPM(boolean newCountingCPM) throws InterruptedException {
+        logger.log(Level.INFO, "In the method setCountingCPM({0})", newCountingCPM);
+        logger.log(Level.INFO, "Current this.countingCPM = {0}", this.countingCPM);
+        if (this.countingCPM !=  newCountingCPM ) 
+        {
+            // We ask for stopping or starting counting every minutes
+            if (this.countingCPM == Boolean.TRUE) 
+            {
+                // We stop counting process
+                logger.log(Level.INFO, "Stopping counting every minutes");
+                // TODO : Imuplements starting TimerBean loop here. 
+            }
+            else
+            {
+                // We start counting process
+                logger.log(Level.INFO, "Starting counting every minutes");
+                // TODO : Imuplements starting TimerBean loop here. 
+            }
+            this.countingCPM = newCountingCPM;
+        }
+            
+        
         if (this.countingCPM){
             Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "About to run coutingCPM()");
         //this.countingCPM();

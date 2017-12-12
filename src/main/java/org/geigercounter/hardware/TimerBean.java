@@ -22,7 +22,7 @@ import javax.inject.Inject;
  * minutes
  */
 @Singleton
-@Startup // Désactivé temporairement
+//@Startup // If you want it to run at the beginning of the deployement.
 public class TimerBean {
 
     @Resource
