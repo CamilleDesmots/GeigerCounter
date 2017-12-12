@@ -5,13 +5,7 @@
 .svn-work
 *.lst
 *.log
-<<<<<<< HEAD
 *.war
 *.jar
 /target/
 /lib/
-=======
-target/
-*.jar
-*.war
->>>>>>> origin/master
