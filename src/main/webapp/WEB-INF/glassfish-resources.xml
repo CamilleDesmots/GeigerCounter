@@ -10,5 +10,5 @@
         <property name="URL" value="jdbc:derby://localhost:1527/GeigerCounter"/>
         <property name="driverClass" value="org.apache.derby.jdbc.ClientDriver"/>
     </jdbc-connection-pool>
-    <jdbc-resource enabled="true" jndi-name="java:app/GeigerCounter Derby database" object-type="user" pool-name="derby_net_GeigerCounter_GeigerCounterPool"/>
+    <jdbc-resource enabled="true" jndi-name="jdbc/GeigerCounter" object-type="user" pool-name="GeigerCounterPool"/>
 </resources>

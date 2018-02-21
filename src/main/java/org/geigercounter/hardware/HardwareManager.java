@@ -15,10 +15,6 @@ import javax.ejb.Singleton;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-<<<<<<< HEAD
-import org.geigercounter.data.Hardware;
-=======
->>>>>>> origin/master
 
 /**
  *
@@ -81,20 +77,8 @@ public class HardwareManager implements Serializable {
         this.version = myGQGMC.getVersion();
         logger.log(Level.INFO, "this.version) [{0}]", this.version);
         
-<<<<<<< HEAD
         this.serialNumber = myGQGMC.getSerialNumber();
         logger.log(Level.INFO, "this.serialNumber) [{0}]", this.serialNumber);        
-        
-        // Creation of this hardware in the database if necessary
-        Hardware newHardware = new Hardware();
-        newHardware.setSerialnumber(this.version);
-        newHardware.setSerialnumber(this.serialNumber);
-        
-=======
-        // We have to check if this hardware is already in the database
-       
->>>>>>> origin/master
-        
     }
 
         /**

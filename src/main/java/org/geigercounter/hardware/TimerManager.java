@@ -8,7 +8,6 @@ package org.geigercounter.hardware;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -47,7 +46,7 @@ public class TimerManager implements Serializable {
 
     public void setTimer() {
         long timeoutDuration = 8000;
-        timerSession.setTimer(timeoutDuration);
+        timerSession.setTimer(timeoutDuration); 
     }
 
     /**
