@@ -44,7 +44,6 @@ public class TimerBeanCPM {
     private Timer timerCPM;
     private TimerHandle timerCpmHandle;
     private String timerCpmInfo;
-    
 
     private Date lastProgrammaticTimeout;
     private Date lastAutomaticTimeout;
@@ -59,17 +58,14 @@ public class TimerBeanCPM {
     private Hardware hardware;
     private Cpm cpm;
     private CpmPK cpmPK;
-    
-    private EntityManager em;
-    private EntityManagerFactory emf;
 
     @Inject
     private HardwareManager hardwareManager;
 
     @Inject
-    CpmController cpmController;
-    
-    @Inject 
+    private CpmController cpmController;
+
+    @Inject
     HardwareController hardwareController;
 
     public void TimerBean() {
@@ -90,22 +86,12 @@ public class TimerBeanCPM {
     @Timeout
     public void programmaticTimeout(Timer timer) {
         // We check if it's the CPM time out
-        LOGGER.log(Level.INFO,"Programmatic timeout occurred. Timer info : {0}",timer.getInfo().toString());
-        if (timer.getHandle() == this.timerCpmHandle){
-            LOGGER.log(Level.INFO,"Programmatic timeout occurred. This is the CPM timer.");
-  
-            this.lastProgrammaticTimeout = new Date();
-        
-            this.lastCPM = this.hardwareManager.getCPM();
-            // TODO Save data in database
-            cpm = cpmController.prepareCreate();
-            cpm.setCpm(lastCPM);
-            cpmPK = new CpmPK();
-            cpmPK.setHarwareid(hardware.getHardwareid());
-            cpmPK.setTimestamp(lastAutomaticTimeout);
-            cpm.setCpmPK(cpmPK);
-            cpmController.create();
-        }
+        //LOGGER.log(Level.INFO, "Programmatic timeout occurred. Timer info : {0}", timer.getInfo().toString());
+        //if (timer.getHandle() == this.timerCpmHandle) {
+        LOGGER.log(Level.INFO, "Programmatic timeout occurred. This is the CPM timer.");
+
+        this.createCPM();
+        //}
     }
 
     //@Schedule(minute = "*/1", hour = "*", persistent = false)
@@ -182,26 +168,15 @@ public class TimerBeanCPM {
         if (this.countingEveryMinutes != newValue) {
             // Either we stop or we start counting
             if (newValue == Boolean.TRUE) {
-                                
+
                 // We start counting every minutes
                 LOGGER.log(Level.INFO, "Starting countingEveryMinutes");
-                hardware = hardwareController.prepareCreate();
-                hardware.setHardwareid(Short.parseShort("2"));
-                String version = hardwareManager.getVersion();
-                hardware.setVersion(version);
-                String serialNumber = hardwareManager.getSerialNumber();
-                hardware.setSerialnumber(serialNumber);
-                hardwareController.prepareCreate();
-                hardwareController.create();
-                hardwareController.destroy();
-                  
-                //Query query = em.createNamedQuery("Hardware.findByVersionAndSerialnumber");
-                //query.setParameter("version", version);
-                //query.setParameter("serialnumber", serialNumber);
-                //hardware = (Hardware) query.getSingleResult();
-  
-                //this.timerCPM = timerService.createSingleActionTimer(this.oneMinuteDuration, new TimerConfig());
-                this.timerCPM = timerService.createTimer(this.oneMinuteDuration, this.oneMinuteDuration,this.timerCpmInfo);
+
+                // Create hardware entity
+                this.createHardware();
+
+                // TODO : Pourquoi je plante ici ? 
+                this.timerCPM = timerService.createTimer(this.oneMinuteDuration, this.oneMinuteDuration, this.timerCpmInfo);
                 this.timerCpmHandle = this.timerCPM.getHandle();
             } else {
                 // We stop counting every minutes
@@ -212,6 +187,36 @@ public class TimerBeanCPM {
         }
 
         this.countingEveryMinutes = newValue;
+    }
+
+    private void createHardware() {
+        //TODO Check if the harware already exist before creating one...
+
+        //Query query = em.createNamedQuery("Hardware.findByVersionAndSerialnumber");
+        //query.setParameter("version", version);
+        //query.setParameter("serialnumber", serialNumber);
+        //hardware = (Hardware) query.getSingleResult();
+        hardware = hardwareController.prepareCreate();
+        hardware.setHardwareid(Short.parseShort("2"));
+        hardware.setVersion(hardwareManager.getVersion());
+        hardware.setSerialnumber(hardwareManager.getSerialNumber());
+        hardwareController.create();
+
+    }
+
+    private void createCPM() {
+        this.lastProgrammaticTimeout = new Date();
+
+        LOGGER.log(Level.INFO, "Try to create cpm Entity");
+        this.lastCPM = this.hardwareManager.getCPM();
+        cpm = cpmController.prepareCreate();
+        cpm.setCpm(lastCPM);
+        cpmPK = new CpmPK();
+        LOGGER.log(Level.INFO, "Hardware ID is {0}",hardware.getHardwareid());
+        cpmPK.setHarwareid(hardware.getHardwareid());
+        cpmPK.setTimestamp(lastAutomaticTimeout);
+        cpm.setCpmPK(cpmPK);
+        cpmController.create();
     }
 
 }
