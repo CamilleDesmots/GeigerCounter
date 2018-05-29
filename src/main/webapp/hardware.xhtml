@@ -24,16 +24,7 @@ and open the template in the editor.
                             <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
                         </c:choose>
                     </h:outputLabel>
-                    <h:outputLabel>Coutning CPM every minutes is running ?</h:outputLabel>
-                    <h:outputLabel>
-                        <c:choose>
-                            <c:when test="#{hardwareManager.countingCPM}">
-                                <h:outputLabel>Yes</h:outputLabel>
-                            </c:when>
-                            <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
-                        </c:choose>
-                    </h:outputLabel>
-
+               
 
                     <h:outputLabel>Version :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.version}"/>
@@ -55,9 +46,12 @@ and open the template in the editor.
                     <h:outputLabel escape="false" value="#{hardwareManager.CPS}"/>
 
                     <h:outputLabel>Last CPM :</h:outputLabel>
-                    <h:outputLabel escape="false" value="#{hardwareManager.CPM}"/>
+                    <h:outputLabel escape="false" value="#{hardwareManager.lastCPM}"/>
                     
-                    <h:outputLabel>Number of  CPM requested:</h:outputLabel>
+                     <h:outputLabel>Last CPM Date:</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.lastCPMDate}"/>
+                    
+                    <h:outputLabel>Number of CPM requested:</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.requestedCPM}"/>
 
                     <h:outputLabel>The last programmatic timeout was:</h:outputLabel>
@@ -68,31 +62,18 @@ and open the template in the editor.
                        
                 </h:panelGrid>
 
+                
                 <h:form>
                     <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                        <!-- <h:outputLabel for="checkbox1">Counting every second CPM</h:outputLabel>
-                         <h:selectBooleanCheckbox id="checkbox1"  label="Counting every second CPM" value="#{hardwareManager.counting}"/>-->
+                        <h:outputLabel for="checkbox1">Counting every minutes CPM ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox1"  label="Counting every minutes CPM ?" value="#{timerBeanCPM.countingEveryMinutes}"/>
+                    
+                        <h:outputLabel for="checkbox2">Emulation of GQ-GMC320 ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox2"  label="Emulation of GQ-GMC320 ?" value="#{hardwareManager.emulation}"/>
                     </h:panelGrid>
                     <h:commandButton value="Refresh" action="hardware.xhtml?i=2" />
                 </h:form>
-                <h:form>
-                    <c:choose>
-                        <c:when test="#{hardwareManager.countingCPM == FALSE}">
-                            <h:commandButton value="Stop CPM every minutes" actionListener="#{hardwareManager.setCountingCPM(false)}"/>
-                        </c:when>
-                        <c:otherwise>
-                            <h:commandButton value="Start CPM every minutes"  actionListener="#{hardwareManager.setCountingCPM(true)}" />
-                        </c:otherwise>
-                    </c:choose>
-
-                </h:form>
-
-                <h:form>
-                    <h:commandButton value="Start Timer" action="#{timerManager.setTimer}" />
-                    <h:commandButton value="Refresh" action="hardware.xhtml?i=2"/>
-                </h:form>
-
-            </ui:define>
+           </ui:define>
 
         </ui:composition>
     </body>

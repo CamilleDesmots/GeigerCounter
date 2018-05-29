@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="HardwareEditDlg" widgetVar="HardwareEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditHardwareTitle}">
+            <h:form id="HardwareEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{hardwareController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditHardwareLabel_hardwareid}" for="hardwareid" />
+                        <p:inputText id="hardwareid" value="#{hardwareController.selected.hardwareid}" title="#{bundle.EditHardwareTitle_hardwareid}" required="true" requiredMessage="#{bundle.EditHardwareRequiredMessage_hardwareid}"/>
+                        <p:outputLabel value="#{bundle.EditHardwareLabel_version}" for="version" />
+                        <p:inputText id="version" value="#{hardwareController.selected.version}" title="#{bundle.EditHardwareTitle_version}" />
+                        <p:outputLabel value="#{bundle.EditHardwareLabel_serialnumber}" for="serialnumber" />
+                        <p:inputText id="serialnumber" value="#{hardwareController.selected.serialnumber}" title="#{bundle.EditHardwareTitle_serialnumber}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{hardwareController.update}" value="#{bundle.Save}" update="display,:HardwareListForm:datalist,:growl" oncomplete="handleSubmit(args, 'HardwareEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="HardwareEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -6,6 +6,8 @@
 package org.geigercounter.hardware;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
@@ -17,14 +19,20 @@ import javax.inject.Named;
 @Named
 @SessionScoped
 public class TimerManager implements Serializable {
-   @EJB
-    private TimerBean timerSession;
+
+    @EJB
+    private TimerBeanCPM timerSession;
 
     private String lastProgrammaticTimeout;
     private String lastAutomaticTimeout;
- 
-    /** Creates a new instance of TimerManager */
+
+    private static final Logger logger = Logger.getLogger(Object.class.getName());
+
+    /**
+     * Creates a new instance of TimerManager
+     */
     public TimerManager() {
+        logger.log(Level.INFO, "Instantiate class \"{0}\"", Object.class.getName());
         this.lastProgrammaticTimeout = "never";
         this.lastAutomaticTimeout = "never";
     }
@@ -46,7 +54,7 @@ public class TimerManager implements Serializable {
 
     public void setTimer() {
         long timeoutDuration = 8000;
-        timerSession.setTimer(timeoutDuration); 
+        timerSession.setTimer(timeoutDuration);
     }
 
     /**
