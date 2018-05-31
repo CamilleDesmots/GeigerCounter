@@ -70,6 +70,8 @@ and open the template in the editor.
                     
                         <h:outputLabel for="checkbox2">Emulation of GQ-GMC320 ?</h:outputLabel>
                         <h:selectBooleanCheckbox id="checkbox2"  label="Emulation of GQ-GMC320 ?" value="#{hardwareManager.emulation}"/>
+                        <h:outputLabel for="checkbox3">Generate data sample ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox3" label="Generate data sample ?" value ="#{dataSample.populate}"/>
                     </h:panelGrid>
                     <h:commandButton value="Refresh" action="hardware.xhtml?i=2" />
                 </h:form>

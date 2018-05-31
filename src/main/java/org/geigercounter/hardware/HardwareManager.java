@@ -32,8 +32,7 @@ import javax.persistence.PersistenceContext;
 @ApplicationScoped
 //@SessionScoped
 //@ManagedBean
-@Named("hardwareManager")
-
+@Named
 public class HardwareManager implements Serializable {
 
     // Add business logic below. (Right-click in editor and choose
@@ -51,7 +50,7 @@ public class HardwareManager implements Serializable {
     private boolean countingCPM;
     private Timer timer;
 
-    private static final Logger logger = Logger.getLogger(Object.class.getName());
+    private static final Logger logger = Logger.getLogger(HardwareManager.class.getName());
 
     private final GQGMCInterface myGQGMC;
 
@@ -65,7 +64,7 @@ public class HardwareManager implements Serializable {
     public HardwareManager() {
         requestedCPM = 0;
         countingCPM = Boolean.FALSE;
-        logger.log(Level.INFO, "Instantiate class \"{0}\"", Object.class.getName());
+        logger.log(Level.INFO, "Instantiate class \"{0}\"", HardwareManager.class.getName());
         // By default we start in emulation mode
         emulation = Boolean.TRUE;
         myGQGMC = new GQGMCsim("/dev/gqgmc");

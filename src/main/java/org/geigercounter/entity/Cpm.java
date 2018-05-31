@@ -26,7 +26,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Cpm.findAll", query = "SELECT c FROM Cpm c")
     , @NamedQuery(name = "Cpm.findByHarwareid", query = "SELECT c FROM Cpm c WHERE c.cpmPK.harwareid = :harwareid")
     , @NamedQuery(name = "Cpm.findByTimestamp", query = "SELECT c FROM Cpm c WHERE c.cpmPK.timestamp = :timestamp")
-    , @NamedQuery(name = "Cpm.findByCpm", query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")})
+    , @NamedQuery(name = "Cpm.findByCpm", query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")
+    , @NamedQuery(name = "Cpm.findMinCpm", query ="SELECT MIN(c.cpm) FROM Cpm c WHERE c.cpmPK.harwareid = :hardwareid")    
+})
 public class Cpm implements Serializable {
 
     private static final long serialVersionUID = 1L;

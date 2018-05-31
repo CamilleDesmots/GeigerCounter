@@ -7,40 +7,18 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./template.xhtml" >
             <ui:define name="title">
                 GQ-GMC Geiger CPM
             </ui:define>
             <ui:define name="box">
-                <p>Specific content for  index.xhtml</p>
-
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <p:chart type="line" model="#{chartViewAllCPM.lineModel2}"/>
+                </h:panelGrid>
             </ui:define>
-
         </ui:composition>
-
-        <br />
-        <h:link outcome="/test/List" value="Show All Test Items"/>
-        <br />
-        <h:link outcome="/CRUD/cpm/List" value="Show All Cpm Items"/>
-        <br />
-        <h:link outcome="/CRUD/hardware/List" value="Show All Hardware Items"/>
-        <br />
-        <h:link outcome="/CRUD/test/List" value="Show All Test Items"/>
     </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </html>

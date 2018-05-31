@@ -26,10 +26,10 @@ public class GQGMCsim implements GQGMCInterface {
     private int idleTime;
     private float temp;
     
-     private static final Logger logger = Logger.getLogger("org.geigercounter.hardware.GQGMCsim");
+     private static final Logger LOGGER = Logger.getLogger("org.geigercounter.hardware.GQGMCsim");
 
     public GQGMCsim(String newDevicePath) {
-        logger.log(Level.INFO, "In the method GQGMCsim()");
+        LOGGER.log(Level.INFO, "In the method GQGMCsim()");
         this.devicePath = newDevicePath;
         this.version = "GQsim Re 1.01";
         this.model = "GQSim";
@@ -100,7 +100,7 @@ public class GQGMCsim implements GQGMCInterface {
     @Override
     public int getCPM() {
         // GQ-GMC320 return CPM on two bytes but only the lSB14 bites are used.   
-        logger.log(Level.INFO, "In the method getCPM()");
+        LOGGER.log(Level.INFO, "In the method getCPM()");
         // In theory we could have this :  
         // return rand.nextInt(16383);
         // In the reality we could have this :  
@@ -111,7 +111,7 @@ public class GQGMCsim implements GQGMCInterface {
     @Override
     public int getCPS() {
         // Same remarks as for getCPM
-        logger.log(Level.INFO, "In the method getCPS()");
+        LOGGER.log(Level.INFO, "In the method getCPS()");
         // In theory we could have this :  
         // return rand.nextInt(16383);
         // In the reality we could have this :  
