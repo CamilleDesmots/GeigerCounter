@@ -14,8 +14,8 @@
                     <p:panelGrid columns="2" rendered="#{cpmController.selected != null}">
                         <p:outputLabel value="#{bundle.EditCpmLabel_cpmPK_timestamp}" for="cpmPK_timestamp" />
                         <p:calendar id="cpmPK_timestamp" pattern="MM/dd/yyyy HH:mm:ss" value="#{cpmController.selected.cpmPK.timestamp}" title="#{bundle.EditCpmTitle_cpmPK_timestamp}" required="true" requiredMessage="#{bundle.EditCpmRequiredMessage_cpmPK_timestamp}" showOn="button"/>
-                        <p:outputLabel value="#{bundle.EditCpmLabel_cpmPK_harwareid}" for="cpmPK_harwareid" />
-                        <p:inputText id="cpmPK_harwareid" value="#{cpmController.selected.cpmPK.harwareid}" title="#{bundle.EditCpmTitle_cpmPK_harwareid}" required="true" requiredMessage="#{bundle.EditCpmRequiredMessage_cpmPK_harwareid}"/>
+                        <p:outputLabel value="#{bundle.EditCpmLabel_cpmPK_hardwareid}" for="cpmPK_hardwareid" />
+                        <p:inputText id="cpmPK_hardwareid" value="#{cpmController.selected.cpmPK.hardwareid}" title="#{bundle.EditCpmTitle_cpmPK_hardwareid}" required="true" requiredMessage="#{bundle.EditCpmRequiredMessage_cpmPK_hardwareid}"/>
                         <p:outputLabel value="#{bundle.EditCpmLabel_cpm}" for="cpm" />
                         <p:inputText id="cpm" value="#{cpmController.selected.cpm}" title="#{bundle.EditCpmTitle_cpm}" />
                     </p:panelGrid>

@@ -21,7 +21,7 @@ public class HardwareFacade extends AbstractFacade<Hardware> {
     private EntityManager em;
 
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return em;
     }
 

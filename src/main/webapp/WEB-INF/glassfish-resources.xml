@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 <resources>
+    <!-- For using Timer with JPA Entity the ressource type of the database 
+    should be res-type="javax.sqlXADataSource" instead of "javax.sql.DataSource"
+    -->
     <jdbc-connection-pool 
         allow-non-component-callers="false" 
         associate-with-thread="false" 
@@ -21,7 +24,7 @@
         max-wait-time-in-millis="60000" 
         name="GeigerCounterPool" 
         non-transactional-connections="false" pool-resize-quantity="2" 
-        res-type="javax.sql.DataSource" statement-timeout-in-seconds="-1" 
+        res-type="javax.sql.XADataSource" statement-timeout-in-seconds="-1" 
         steady-pool-size="8" validate-atmost-once-period-in-seconds="0" 
         wrap-jdbc-objects="false">
         <property name="serverName" value="localhost"/>

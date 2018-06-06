@@ -22,8 +22,8 @@ import javax.validation.constraints.NotNull;
 public class CpmPK implements Serializable {
 
     @Basic(optional = false)
-    @Column(name = "HARWAREID")
-    private short harwareid;
+    @Column(name = "hardwareID")
+    private short hardwareid;
     @Basic(optional = false)
     @NotNull
     @Column(name = "TIMESTAMP")
@@ -33,17 +33,17 @@ public class CpmPK implements Serializable {
     public CpmPK() {
     }
 
-    public CpmPK(short harwareid, Date timestamp) {
-        this.harwareid = harwareid;
+    public CpmPK(short hardwareid, Date timestamp) {
+        this.hardwareid = hardwareid;
         this.timestamp = timestamp;
     }
 
-    public short getHarwareid() {
-        return harwareid;
+    public short gethardwareid() {
+        return hardwareid;
     }
 
-    public void setHarwareid(short harwareid) {
-        this.harwareid = harwareid;
+    public void sethardwareid(short hardwareid) {
+        this.hardwareid = hardwareid;
     }
 
     public Date getTimestamp() {
@@ -57,7 +57,7 @@ public class CpmPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) harwareid;
+        hash += (int) hardwareid;
         hash += (timestamp != null ? timestamp.hashCode() : 0);
         return hash;
     }
@@ -69,7 +69,7 @@ public class CpmPK implements Serializable {
             return false;
         }
         CpmPK other = (CpmPK) object;
-        if (this.harwareid != other.harwareid) {
+        if (this.hardwareid != other.hardwareid) {
             return false;
         }
         if ((this.timestamp == null && other.timestamp != null) || (this.timestamp != null && !this.timestamp.equals(other.timestamp))) {
@@ -80,7 +80,7 @@ public class CpmPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.geigercounter.entity.CpmPK[ harwareid=" + harwareid + ", timestamp=" + timestamp + " ]";
+        return "org.geigercounter.entity.CpmPK[ hardwareid=" + hardwareid + ", timestamp=" + timestamp + " ]";
     }
     
 }

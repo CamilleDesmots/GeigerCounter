@@ -142,14 +142,14 @@ public class CpmController implements Serializable {
             org.geigercounter.entity.CpmPK key;
             String values[] = value.split(SEPARATOR_ESCAPED);
             key = new org.geigercounter.entity.CpmPK();
-            key.setHarwareid(Short.parseShort(values[0]));
+            key.sethardwareid(Short.parseShort(values[0]));
             key.setTimestamp(java.sql.Date.valueOf(values[1]));
             return key;
         }
 
         String getStringKey(org.geigercounter.entity.CpmPK value) {
             StringBuilder sb = new StringBuilder();
-            sb.append(value.getHarwareid());
+            sb.append(value.gethardwareid());
             sb.append(SEPARATOR);
             sb.append(value.getTimestamp());
             return sb.toString();

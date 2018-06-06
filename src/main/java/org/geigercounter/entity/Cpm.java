@@ -24,10 +24,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cpm.findAll", query = "SELECT c FROM Cpm c")
-    , @NamedQuery(name = "Cpm.findByHarwareid", query = "SELECT c FROM Cpm c WHERE c.cpmPK.harwareid = :harwareid")
+    , @NamedQuery(name = "Cpm.findByHardwareid", query = "SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid")
     , @NamedQuery(name = "Cpm.findByTimestamp", query = "SELECT c FROM Cpm c WHERE c.cpmPK.timestamp = :timestamp")
     , @NamedQuery(name = "Cpm.findByCpm", query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")
-    , @NamedQuery(name = "Cpm.findMinCpm", query ="SELECT MIN(c.cpm) FROM Cpm c WHERE c.cpmPK.harwareid = :hardwareid")    
+    , @NamedQuery(name = "Cpm.countAll", query ="SELECT count(c) FROM Cpm c") 
+    , @NamedQuery(name = "Cpm.findTimestampBetweenAndHardwarid", query ="SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd")    
 })
 public class Cpm implements Serializable {
 
@@ -44,8 +45,8 @@ public class Cpm implements Serializable {
         this.cpmPK = cpmPK;
     }
 
-    public Cpm(short harwareid, Date timestamp) {
-        this.cpmPK = new CpmPK(harwareid, timestamp);
+    public Cpm(short hardwareid, Date timestamp) {
+        this.cpmPK = new CpmPK(hardwareid, timestamp);
     }
 
     public CpmPK getCpmPK() {

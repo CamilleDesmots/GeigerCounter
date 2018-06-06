@@ -21,7 +21,7 @@ public class CpmFacade extends AbstractFacade<Cpm> {
     private EntityManager em;
 
     @Override
-    protected EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return em;
     }
 

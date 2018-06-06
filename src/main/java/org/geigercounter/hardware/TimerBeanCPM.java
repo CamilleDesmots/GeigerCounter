@@ -2,10 +2,14 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * ATTENTION !!!
+ * For working with Timer your database pool must use the resource type "javax.sql.XADataSource"
+ * See : https://javaee.github.io/glassfish/doc/5.0/application-development-guide.pdf
  */
 package org.geigercounter.hardware;
 
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -17,12 +21,23 @@ import javax.ejb.TimerService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
 import org.geigercounter.entity.Cpm;
 import org.geigercounter.entity.CpmPK;
 import org.geigercounter.entity.Hardware;
 import org.geigercounter.entity.exceptions.RollbackFailureException;
 import org.geigercounter.jsf.CpmController;
 import org.geigercounter.jsf.HardwareController;
+import org.geigercounter.sessionbean.CpmFacade;
+import org.geigercounter.sessionbean.HardwareFacade;
+import org.geigercounter.sessionbean.StatelessEntityManipulation;
 
 /**
  * @author camilledesmots Singletion that create a timer that ask for CPM every
@@ -31,7 +46,6 @@ import org.geigercounter.jsf.HardwareController;
 @Named
 @Singleton
 @ApplicationScoped
-//@Startup // If you want it to run at the beginning of the deployement.
 public class TimerBeanCPM {
 
     @Resource
@@ -42,18 +56,15 @@ public class TimerBeanCPM {
     private String timerCpmInfo;
 
     private Date lastProgrammaticTimeout;
-    private Date lastAutomaticTimeout;
     private int lastCPM;
 
     private boolean countingEveryMinutes;
 
-    private final long oneMinuteDuration = 6000;
+    private final long oneMinuteDuration = 60000; // 60 000 = 1 minutes
 
     private static final Logger LOGGER = Logger.getLogger(TimerBeanCPM.class.getName());
 
-    private Hardware hardware;
-    private Cpm cpm;
-    private CpmPK cpmPK;
+    private Short hardwareId;
 
     @Inject
     private HardwareManager hardwareManager;
@@ -64,8 +75,17 @@ public class TimerBeanCPM {
     @Inject
     HardwareController hardwareController;
 
+    @Inject
+    private HardwareFacade hardwareFacade;
+
+    @Inject
+    private CpmFacade cpmFacade;
+
+    @Inject
+    private StatelessEntityManipulation statelessEntityManipulation;
+
     public void TimerBean() {
-        LOGGER.log(Level.INFO, "Instantiate class \"{0}\"", Object.class.getName());
+        LOGGER.log(Level.INFO, "Instantiate class TimerBean");
         // By default the counting loop is not started
         this.countingEveryMinutes = Boolean.FALSE;
         this.timerCpmInfo = "Counting CPM every minutes";
@@ -80,67 +100,19 @@ public class TimerBeanCPM {
     }
 
     @Timeout
-    public void programmaticTimeout(Timer timer) {
+    //@TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
+    public void programmaticTimeout(Timer timer) throws IllegalStateException, SecurityException, SystemException, NotSupportedException, RollbackException, HeuristicMixedException, HeuristicRollbackException, NamingException {
         // We check if it's the CPM time out
+
         //LOGGER.log(Level.INFO, "Programmatic timeout occurred. Timer info : {0}", timer.getInfo().toString());
-        //if (timer.getHandle() == this.timerCpmHandle) {
-        LOGGER.log(Level.INFO, "Programmatic timeout occurred. This is the CPM timer.");
+        LOGGER.log(Level.FINE, "Programmatic timeout occurred. This is the CPM timer.");
 
-        this.createCPM();
-        //}
-    }
+        this.lastProgrammaticTimeout = new Date();
+        this.lastCPM = this.hardwareManager.getCPM();
 
-    //@Schedule(minute = "*/1", hour = "*", persistent = false)
-    public void automaticTimeout() {
-        this.lastAutomaticTimeout = new Date();
-        LOGGER.info("Automatic timeout occurred");
+        LOGGER.log(Level.FINE, "New record Cpm sould be hardwareID:{0} Cpm:{1} Timestamp: {2}", new Object[]{this.hardwareId, this.lastCPM, this.lastProgrammaticTimeout});
 
-        if (this.countingEveryMinutes == Boolean.TRUE) {
-            LOGGER.info("Continue counting loop.");
-            this.lastCPM = hardwareManager.getCPM();
-            LOGGER.log(Level.INFO, "Last CPM : {0} at {1}", new Object[]{this.lastCPM, this.lastAutomaticTimeout});
-            // TODO : insert the serialisation of the data here.
-
-            this.setTimer(this.oneMinuteDuration);
-        } else {
-            LOGGER.info("Stop counting loop.");
-        }
-    }
-
-    /**
-     * @return the lastTimeout
-     */
-    public String getLastProgrammaticTimeout() {
-        if (lastProgrammaticTimeout != null) {
-            return lastProgrammaticTimeout.toString();
-        } else {
-            return "never";
-        }
-    }
-
-    /**
-     * @param lastTimeout the lastTimeout to set
-     */
-    public void setLastProgrammaticTimeout(Date lastTimeout) {
-        this.lastProgrammaticTimeout = lastTimeout;
-    }
-
-    /**
-     * @return the lastAutomaticTimeout
-     */
-    public String getLastAutomaticTimeout() {
-        if (lastAutomaticTimeout != null) {
-            return lastAutomaticTimeout.toString();
-        } else {
-            return "never";
-        }
-    }
-
-    /**
-     * @param lastAutomaticTimeout the lastAutomaticTimeout to set
-     */
-    public void setLastAutomaticTimeout(Date lastAutomaticTimeout) {
-        this.lastAutomaticTimeout = lastAutomaticTimeout;
+        statelessEntityManipulation.CreateCpm(this.hardwareId, this.lastProgrammaticTimeout, this.lastCPM);
     }
 
     /**
@@ -158,61 +130,26 @@ public class TimerBeanCPM {
      */
     public void setCountingEveryMinutes(boolean newValue) throws RollbackFailureException {
 
-        LOGGER.log(Level.INFO, "Set countingEveryMinutes to {0} ", newValue);
-        LOGGER.log(Level.INFO, "Set countingEveryMinutes from {0}", this.countingEveryMinutes);
-
+        LOGGER.log(Level.FINE, "Set countingEveryMinutes from {0 }to {1} ", new Object[]{this.countingEveryMinutes, newValue});
         if (this.countingEveryMinutes != newValue) {
             // Either we stop or we start counting
             if (newValue == Boolean.TRUE) {
 
-                // We start counting every minutes
+                // We initiate a programmatic timer for counting every minutes
                 LOGGER.log(Level.INFO, "Starting countingEveryMinutes");
 
                 // Create hardware entity
-                this.createHardware();
+                this.hardwareId = statelessEntityManipulation.CreateHardware(hardwareManager.getVersion(), hardwareManager.getSerialNumber());
 
-                // TODO : Pourquoi je plante ici ? 
                 this.timerCPM = timerService.createTimer(this.oneMinuteDuration, this.oneMinuteDuration, this.timerCpmInfo);
                 this.timerCpmHandle = this.timerCPM.getHandle();
             } else {
                 // We stop counting every minutes
                 LOGGER.log(Level.INFO, "Stopping countingEveryMinutes");
-                //TODO: Implements stopping TimerBeanCPM loop here.
                 this.timerCPM.cancel();
             }
         }
 
         this.countingEveryMinutes = newValue;
     }
-
-    private void createHardware() {
-        //TODO Check if the harware already exist before creating one...
-
-        //Query query = em.createNamedQuery("Hardware.findByVersionAndSerialnumber");
-        //query.setParameter("version", version);
-        //query.setParameter("serialnumber", serialNumber);
-        //hardware = (Hardware) query.getSingleResult();
-        hardware = hardwareController.prepareCreate();
-        hardware.setHardwareid(Short.parseShort("2"));
-        hardware.setVersion(hardwareManager.getVersion());
-        hardware.setSerialnumber(hardwareManager.getSerialNumber());
-        hardwareController.create();
-
-    }
-
-    private void createCPM() {
-        this.lastProgrammaticTimeout = new Date();
-
-        LOGGER.log(Level.INFO, "Try to create cpm Entity");
-        this.lastCPM = this.hardwareManager.getCPM();
-        cpm = cpmController.prepareCreate();
-        cpm.setCpm(lastCPM);
-        cpmPK = new CpmPK();
-        LOGGER.log(Level.INFO, "Hardware ID is {0}",hardware.getHardwareid());
-        cpmPK.setHarwareid(hardware.getHardwareid());
-        cpmPK.setTimestamp(lastAutomaticTimeout);
-        cpm.setCpmPK(cpmPK);
-        cpmController.create();
-    }
-
 }
