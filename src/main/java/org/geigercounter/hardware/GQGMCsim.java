@@ -9,11 +9,13 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author camilledesmots
  */
+//@Stateless
 public class GQGMCsim implements GQGMCInterface {
 
     private String version;
@@ -28,9 +30,8 @@ public class GQGMCsim implements GQGMCInterface {
     
      private static final Logger LOGGER = Logger.getLogger("org.geigercounter.hardware.GQGMCsim");
 
-    public GQGMCsim(String newDevicePath) {
+    public GQGMCsim() {
         LOGGER.log(Level.INFO, "In the method GQGMCsim()");
-        this.devicePath = newDevicePath;
         this.version = "GQsim Re 1.01";
         this.model = "GQSim";
         this.revision = "Re 1.01";
@@ -38,6 +39,15 @@ public class GQGMCsim implements GQGMCInterface {
         this.rand = new Random();
         this.emulation = Boolean.TRUE;
         this.idleTime = 310;
+    }
+    
+      public void setDevicePath(String newDevicePath){
+        LOGGER.log(Level.INFO, "In the method setDevicePath()");
+        this.devicePath = newDevicePath;
+    }
+      
+        public void setConfig(){
+        LOGGER.log(Level.INFO, "In the method setConfig()");   
     }
 
     @Override

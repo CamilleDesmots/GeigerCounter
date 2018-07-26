@@ -30,11 +30,11 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     private float volt;
     private LocalDateTime dateTime;
     
-    private static final Logger logger = Logger.getLogger(Object.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Object.class.getName());
 
     @Override
-    public void dataReceived(SerialDataEvent sde) {
-        logger.log(Level.INFO, "In the method dataReceived() : [{0}]", this.commandName);
+    public void dataReceived (SerialDataEvent sde) throws NumberFormatException {
+        LOGGER.log(Level.INFO, "In the method dataReceived() command : [{0}]", this.commandName);
 
         try {
             switch (this.commandName) {
@@ -52,6 +52,7 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
                     break;
                 case "<GETTEMP>>":
                     this.tempText = sde.getHexByteString("", "", "");
+                  
                     this.tempInt = Integer.parseInt(this.tempText.substring(0, 3), 16);
                     this.sign = Integer.parseInt(this.tempText.substring(4, 5), 16);
                     this.temp = this.tempInt;
@@ -77,11 +78,11 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
                     break;
                 default:
                     this.tempText = sde.getHexByteString("", "", "");
-                    logger.log(Level.WARNING, "Don''t know how to handle command ''{0}'' The HEXA response is [{1}]", new Object[]{this.commandName, this.tempText});
+                    LOGGER.log(Level.WARNING, "Don''t know how to handle command ''{0}'' The HEXA response is [{1}]", new Object[]{this.commandName, this.tempText});
                     break;
             }
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, null, e);
+            } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "During process of the result of command \"{0}\" we get the exception : {1}", new Object[]{this.commandName,e});
         }
     }
 
@@ -94,7 +95,7 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     }
 
     public String getVersion() {
-        logger.log(Level.INFO, "In the method getVersion() version :{0}", this.version);
+        LOGGER.log(Level.INFO, "In the method getVersion() version :{0}", this.version);
 
         return this.version;
     }
@@ -104,7 +105,7 @@ public class GQGMCSerialDataEventListener implements SerialDataEventListener {
     }
 
     public int getCPM() {
-        logger.log(Level.INFO, "In the method getCPM() CPM : {0}", this.cpm);
+        LOGGER.log(Level.INFO, "In the method getCPM() CPM : {0}", this.cpm);
         return this.cpm;
     }
 

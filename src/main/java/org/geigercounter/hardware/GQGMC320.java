@@ -11,11 +11,15 @@ import com.pi4j.util.Console;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Stateless;
+import javax.inject.Named;
 
 /**
  *
  * @author camilledesmots
  */
+//@Stateless
+@Named
 public class GQGMC320 implements GQGMCInterface {
 
     private final boolean heartBeatStatus;
@@ -34,45 +38,69 @@ public class GQGMC320 implements GQGMCInterface {
     private float voltage;
     private float temp;
     
-    private static final Logger logger = Logger.getLogger(Object.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Object.class.getName());
 
     private GQGMCSerialDataEventListener sde;
 
-    public GQGMC320(String newDevicePath) {
-        logger.log(Level.INFO, "In the method GQGMC320(String newDevicePath)");
+    public GQGMC320() {
+        LOGGER.log(Level.INFO, "In the method GQGMC320()");
         this.heartBeatStatus = Boolean.FALSE;
         this.serialStatus = Boolean.FALSE;
-        this.emulation = Boolean.FALSE;
-        this.idleTime = 310;
-        this.devicePath = newDevicePath;
+        
         config = new SerialConfig();
+        
+        this.cpm = 0;
+        this.cps = 0;
+        this.version = "";
+        this.revision = "";
+        this.emulation = Boolean.FALSE;
+        this.devicePath = "";
+        // 2018-07-22 idletime modified from 310 to 350 as I have issued no response after many GETCPM
+        this.idleTime = 350;
+        this.commandName = "";
+        this.serialNumber = "";
+        this.voltage = 0;
+        this.temp = 0;
+        
+        sde = new GQGMCSerialDataEventListener();
+    }
+
+    public void setDevicePath(String newDevicePath){
+        LOGGER.log(Level.INFO, "In the method setDevicePath()");
+        this.devicePath = newDevicePath;
+    }
+    
+    public void setConfig(){
+        LOGGER.log(Level.INFO, "In the method setConfig()");
         config.device(devicePath)
                 .baud(Baud._115200)
                 .dataBits(DataBits._8)
                 .parity(Parity.NONE)
                 .stopBits(StopBits._1)
-                .flowControl(FlowControl.NONE);
-        sde = new GQGMCSerialDataEventListener();
+                .flowControl(FlowControl.NONE); 
     }
-
+    
+    /**
+     *
+     */
     @Override
     public void setSerialOpen() {
-        logger.log(Level.INFO, "In the method setSerialOpen()");
+        LOGGER.log(Level.INFO, "In the method setSerialOpen()");
         serial = SerialFactory.createInstance();
         try {
             serial.open(config);
             serial.addListener(sde);
 
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
-        logger.log(Level.INFO, "End of the method setSerialOpen()");
+        LOGGER.log(Level.INFO, "End of the method setSerialOpen()");
 
     }
 
     @Override
     public String getVersion() {
-        logger.log(Level.INFO, "In the method getVersion()");
+        LOGGER.log(Level.INFO, "In the method getVersion()");
         try {
 
             this.commandName = "<GETVER>>";
@@ -81,18 +109,18 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
-        logger.log(Level.INFO, "End of the method getVersion()");
+        LOGGER.log(Level.INFO, "End of the method getVersion()");
         this.version = sde.getVersion();
-        logger.log(Level.INFO, "this.Version()[{0}]", this.version);
+        LOGGER.log(Level.INFO, "this.Version()[{0}]", this.version);
 
         return this.version;
     }
 
     @Override
     public String getSerialNumber() {
-        logger.log(Level.INFO, "In the method getSerialNumber()");
+        LOGGER.log(Level.INFO, "In the method getSerialNumber()");
         try {
 
             this.commandName = "<GETSERIAL>>";
@@ -101,18 +129,18 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
-        logger.log(Level.INFO, "End of the method getSerialNumber()");
+        LOGGER.log(Level.INFO, "End of the method getSerialNumber()");
         this.serialNumber = sde.getSerialNumber();
-        logger.log(Level.INFO, "SerialNumber[{0}]", this.serialNumber);
+        LOGGER.log(Level.INFO, "SerialNumber[{0}]", this.serialNumber);
 
         return this.serialNumber;
     }
 
     @Override
     public float getVoltage() {
-        logger.log(Level.INFO, "In the method getVoltage())");
+        LOGGER.log(Level.INFO, "In the method getVoltage())");
         try {
 
             this.commandName = "<GETVOLT>>";
@@ -121,11 +149,11 @@ public class GQGMC320 implements GQGMCInterface {
             Thread.sleep(idleTime);
 
         } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
-        logger.log(Level.INFO, "End of the method getVoltage()");
+        LOGGER.log(Level.INFO, "End of the method getVoltage()");
         this.serialNumber = sde.getSerialNumber();
-        logger.log(Level.INFO, "Voltage [{0}]", this.voltage);
+        LOGGER.log(Level.INFO, "Voltage [{0}]", this.voltage);
 
         return this.voltage;
     }
@@ -189,11 +217,11 @@ public class GQGMC320 implements GQGMCInterface {
             sde.setCommanName(this.commandName);
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
-        } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (InterruptedException | IllegalStateException | IOException | NumberFormatException ex) {
+            LOGGER.log(Level.SEVERE, "During process of the result of command \"{0}\" we get the exception : {1}", new Object[]{this.commandName,ex});
         }
         this.cpm = sde.getCPM();
-        logger.log(Level.INFO, "CPM [{0}]", this.cpm);
+        LOGGER.log(Level.INFO, "CPM [{0}]", this.cpm);
         return this.cpm;
     }
 
@@ -204,11 +232,11 @@ public class GQGMC320 implements GQGMCInterface {
             sde.setCommanName(this.commandName);
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
-        } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (InterruptedException | IllegalStateException | IOException | NumberFormatException ex) {
+            LOGGER.log(Level.SEVERE, "During process of the result of command \"{0}\" we get the exception : {1}", new Object[]{this.commandName,ex});
         }
         this.cps = sde.getCPS();
-        logger.log(Level.INFO, "CPS [{0}]", this.cps);
+        LOGGER.log(Level.INFO, "CPS [{0}]", this.cps);
         return this.cps;
 
     }
@@ -240,11 +268,11 @@ public class GQGMC320 implements GQGMCInterface {
             sde.setCommanName(this.commandName);
             serial.writeln(this.commandName);
             Thread.sleep(idleTime);
-        } catch (InterruptedException | IllegalStateException | IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (InterruptedException | IllegalStateException | IOException | NumberFormatException ex) {
+            LOGGER.log(Level.SEVERE, "During process of the result of command \"{0}\" we get the exception : {1}", new Object[]{this.commandName,ex});
         }
         this.temp = sde.getTemp();
-        logger.log(Level.INFO, "temp [{0}]", this.temp);
+        LOGGER.log(Level.INFO, "temp [{0}]", this.temp);
         return this.temp;
 
     }

@@ -16,7 +16,10 @@ and open the template in the editor.
             </ui:define>
             <ui:define name="box">
                 <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <p:chart type="line" model="#{chartViewAllCPM.lineModel2}"/>
+                    <h:form>
+                    <p:poll interval="60" update="lastHourLineChart"/>
+                    <p:chart id="lastHourLineChart" type="line" model="#{chartViewLastMonthCPM.lineChartModelLastMonth}"/>
+                </h:form>
                 </h:panelGrid>
             </ui:define>
         </ui:composition>

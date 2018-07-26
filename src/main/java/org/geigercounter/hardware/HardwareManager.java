@@ -9,15 +9,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.ejb.Asynchronous;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.Timer;
-import javax.ejb.TimerService;
-import javax.ejb.TimerConfig;
-import javax.ejb.TimerService;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,9 +29,6 @@ import javax.persistence.PersistenceContext;
 //@ManagedBean
 @Named
 public class HardwareManager implements Serializable {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
     private boolean emulation;
     // Nombre d'interrogations depuis le démarrage
     private long requestedCPM;
@@ -48,30 +40,37 @@ public class HardwareManager implements Serializable {
     private String revision;
     private String serialNumber;
     private boolean countingCPM;
-    private Timer timer;
 
-    private static final Logger logger = Logger.getLogger(HardwareManager.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(HardwareManager.class.getName());
 
-    private final GQGMCInterface myGQGMC;
+  
+    //@Inject 
+    private GQGMC320 GQGMC320;
 
-    // GQ-GMC320
-    //@Inject GQGMC320 myGQGMC320;
-    //private final GQGMC320 myGQGMC320;
+    //@Inject 
+    private GQGMCsim GQGMCsim;    
+    
+    private GQGMCInterface myGQGMC;
+    
     @PersistenceContext
     EntityManager em;
     
 
     public HardwareManager() {
-        requestedCPM = 0;
+        LOGGER.log(Level.INFO, "Instantiate class \"{0}\"", HardwareManager.class.getName());
+        
+        this.requestedCPM = 0;
         countingCPM = Boolean.FALSE;
-        logger.log(Level.INFO, "Instantiate class \"{0}\"", HardwareManager.class.getName());
+        
         // By default we start in emulation mode
         emulation = Boolean.TRUE;
-        myGQGMC = new GQGMCsim("/dev/gqgmc");
+        myGQGMC =  new GQGMCsim();
+        myGQGMC.setDevicePath("/dev/gqgmc");
+        myGQGMC.setConfig();
 
         //emulation = Boolean.FALSE;
         //myGQGMC = new GQGMC320("/dev/gqgmc");
-        logger.log(Level.INFO, "Try to open the serial connection.");
+        LOGGER.log(Level.INFO, "Try to open the serial connection.");
         //myGQGMC.serialOpen();
         /*
         if (myGQGMC320.getSerialStatus()) {
@@ -84,10 +83,10 @@ public class HardwareManager implements Serializable {
         myGQGMC.setSerialOpen();
 
         version = myGQGMC.getVersion();
-        logger.log(Level.INFO, "version) [{0}]", version);
+        LOGGER.log(Level.INFO, "version) [{0}]", version);
 
         serialNumber = myGQGMC.getSerialNumber();
-        logger.log(Level.INFO, "serialNumber) [{0}]", serialNumber);
+        LOGGER.log(Level.INFO, "serialNumber) [{0}]", serialNumber);
     }
 
     /**
@@ -95,27 +94,50 @@ public class HardwareManager implements Serializable {
      * @return False : no emulation, and True : Emulate a Geiger Counter
      */
     public boolean getEmulation() {
-        logger.log(Level.INFO, "In the method getEmulation()");
+        LOGGER.log(Level.INFO, "In the method getEmulation()");
         return emulation;
     }
 
-    public boolean isEmulation() {
-        logger.log(Level.INFO, "In the method isEmulation()");
-        return emulation;
-    }
+//    public boolean isEmulation() {
+//        LOGGER.log(Level.INFO, "In the method isEmulation()");
+//        return emulation;
+//    }
 
     public void setEmulation(boolean newEmulation) {
-        logger.log(Level.INFO, "In the method setEmulation()");
+        LOGGER.log(Level.INFO, "In the method setEmulation() old value :{0} new value :{1}", new Object[]{Boolean.toString(this.emulation), Boolean.toString(newEmulation)} );
+        
+        if (newEmulation != this.emulation) {
+            if (newEmulation == Boolean.FALSE) {
+                this.myGQGMC = new GQGMC320();
+                this.myGQGMC.setDevicePath("/dev/gqgmc");
+                this.myGQGMC.setConfig();
+
+                LOGGER.log(Level.INFO, "Try to open the serial connection.");
+                this.myGQGMC.setSerialOpen();
+
+                if (this.myGQGMC.getSerialStatus()) {
+                    LOGGER.log(Level.INFO, "Succesfully opened serial communication.");
+
+                } else {
+                    LOGGER.log(Level.SEVERE, "Failed to open serial communication.");
+                }
+            } else {
+                this.myGQGMC = new GQGMCsim();
+                this.myGQGMC.setDevicePath("/dev/gqgmc");
+                this.myGQGMC.setConfig();
+            }
+            this.version = this.myGQGMC.getVersion();
+            this.serialNumber = myGQGMC.getSerialNumber();
+
+        }
+
         emulation = newEmulation;
-        /*
-        if (emulation == FALSE) {
-            myGQGMC = new GQGMC320("/dev/gqgmc");
-        } */
+        
     }
 
     @Lock(LockType.WRITE)
     public int getCPM() {
-        logger.log(Level.INFO, "In the method getCPM()()");
+        LOGGER.log(Level.INFO, "In the method getCPM()()");
         requestedCPM++;
         CPM = myGQGMC.getCPM();
         lastCPM = CPM;
@@ -129,7 +151,7 @@ public class HardwareManager implements Serializable {
      */
     @Lock(LockType.WRITE)
     public int getCPS() {
-        logger.log(Level.INFO, "In the method getCPS()");
+        LOGGER.log(Level.INFO, "In the method getCPS()");
         cps = myGQGMC.getCPS();
         return cps;
     }
@@ -142,44 +164,6 @@ public class HardwareManager implements Serializable {
     public String getVersion() {
         version = myGQGMC.getVersion();
         return version;
-    }
-
-    /**
-     *
-     * @param topCounting TRUE for turning on the loop for counting CPM every
-     * minutes
-     */
-    public void setCountingCPM(boolean newCountingCPM) throws InterruptedException {
-        logger.log(Level.INFO, "In the method setCountingCPM({0})", newCountingCPM);
-        logger.log(Level.INFO, "Current countingCPM = {0}", countingCPM);
-        if (countingCPM != newCountingCPM) {
-            // We ask for stopping or starting counting every minutes
-            if (countingCPM == Boolean.TRUE) {
-                // We stop counting process
-                logger.log(Level.INFO, "Stopping counting every minutes");
-                // TODO : Imuplements starting TimerBean loop here. 
-     
-            } else {
-                // We start counting process
-                logger.log(Level.INFO, "Starting counting every minutes");
-                //TODO: Implements starting TimerBean loop here.
-                
-            }
-            countingCPM = newCountingCPM;
-        }
-
-        if (countingCPM) {
-            Logger.getLogger(HardwareManager.class.getName()).log(Level.INFO, "About to run coutingCPM()");
-            //countingCPM();
-        }
-    }
-
-    /**
-     *
-     * @return TRUE if a loop is counting CPM every minutes
-     */
-    public boolean setCountingCPM() {
-        return countingCPM;
     }
 
     /**

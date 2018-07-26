@@ -9,7 +9,6 @@
 package org.geigercounter.hardware;
 
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -22,16 +21,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
-import org.geigercounter.entity.Cpm;
-import org.geigercounter.entity.CpmPK;
-import org.geigercounter.entity.Hardware;
 import org.geigercounter.entity.exceptions.RollbackFailureException;
 import org.geigercounter.jsf.CpmController;
 import org.geigercounter.jsf.HardwareController;
@@ -90,7 +84,11 @@ public class TimerBeanCPM {
         this.countingEveryMinutes = Boolean.FALSE;
         this.timerCpmInfo = "Counting CPM every minutes";
     }
-
+    
+    public short getHardwareId(){
+        return this.hardwareId;
+    }
+    
     public void setTimer(long intervalDuration) {
         LOGGER.log(Level.INFO,
                 "Setting a programmatic timeout for {0} milliseconds from now.",

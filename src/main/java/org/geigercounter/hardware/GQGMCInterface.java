@@ -93,4 +93,7 @@ public interface GQGMCInterface {
 
     public float getTemp();
 
+    public void setDevicePath(String newDevicePath);
+
+    public void setConfig();
 }

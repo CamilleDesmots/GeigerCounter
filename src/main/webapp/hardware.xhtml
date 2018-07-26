@@ -9,12 +9,14 @@ and open the template in the editor.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html" 
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./template.xhtml">
             <ui:define name="title">GQ-GMC Geiger Counter</ui:define>
             <ui:define name="box">
-                <h:panelGrid columns="2" style="margin-bottom:30px" cellpadding="5">
+                <h:panelGrid columns="2" style="margin-bottom:50px" cellpadding="5">
+
                     <h:outputLabel>Emulation of GQ-GMC320 ?</h:outputLabel>
                     <h:outputLabel>
                         <c:choose>
@@ -24,7 +26,6 @@ and open the template in the editor.
                             <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
                         </c:choose>
                     </h:outputLabel>
-               
 
                     <h:outputLabel>Version :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.version}"/>
@@ -47,29 +48,30 @@ and open the template in the editor.
 
                     <h:outputLabel>Last CPM :</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.lastCPM}"/>
-                    
-                     <h:outputLabel>Last CPM Date:</h:outputLabel>
+
+                    <h:outputLabel>Last CPM Date:</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.lastCPMDate}"/>
-                    
+
                     <h:outputLabel>Number of CPM requested:</h:outputLabel>
                     <h:outputLabel escape="false" value="#{hardwareManager.requestedCPM}"/>
-       
                 </h:panelGrid>
 
-                
                 <h:form>
-                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                    <h:panelGrid columns="2" style="margin-bottom:50px" cellpadding="5">
+
                         <h:outputLabel for="checkbox1">Counting every minutes CPM ?</h:outputLabel>
                         <h:selectBooleanCheckbox id="checkbox1"  label="Counting every minutes CPM ?" value="#{timerBeanCPM.countingEveryMinutes}"/>
-                    
+
                         <h:outputLabel for="checkbox2">Emulation of GQ-GMC320 ?</h:outputLabel>
                         <h:selectBooleanCheckbox id="checkbox2"  label="Emulation of GQ-GMC320 ?" value="#{hardwareManager.emulation}"/>
+
                         <h:outputLabel for="checkbox3">Generate data sample ?</h:outputLabel>
                         <h:selectBooleanCheckbox id="checkbox3" label="Generate data sample ?" value ="#{dataSample.populate}"/>
+
                     </h:panelGrid>
-                    <h:commandButton value="Refresh" action="hardware.xhtml?i=2" />
+                    <p:commandButton value="Refresh" action="hardware.xhtml?i=2" />
                 </h:form>
-           </ui:define>
+            </ui:define>
 
         </ui:composition>
     </body>
