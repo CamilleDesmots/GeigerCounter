@@ -23,12 +23,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "CPM")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Cpm.findAll", query = "SELECT c FROM Cpm c")
-    , @NamedQuery(name = "Cpm.findByHardwareid", query = "SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid")
-    , @NamedQuery(name = "Cpm.findByTimestamp", query = "SELECT c FROM Cpm c WHERE c.cpmPK.timestamp = :timestamp")
-    , @NamedQuery(name = "Cpm.findByCpm", query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")
-    , @NamedQuery(name = "Cpm.countAll", query ="SELECT count(c) FROM Cpm c") 
-    , @NamedQuery(name = "Cpm.findTimestampBetweenAndHardwarid", query ="SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd")    
+    @NamedQuery(name = "Cpm.findAll", 
+            query = "SELECT c FROM Cpm c")
+    , @NamedQuery(name = "Cpm.findByHardwareid", 
+            query = "SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid")
+    , @NamedQuery(name = "Cpm.findByTimestamp", 
+            query = "SELECT c FROM Cpm c WHERE c.cpmPK.timestamp = :timestamp")
+    , @NamedQuery(name = "Cpm.findByCpm", 
+            query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")
+    , @NamedQuery(name = "Cpm.countAll", 
+            query ="SELECT count(c) FROM Cpm c") 
+    , @NamedQuery(name = "Cpm.findTimestampBetweenAndHardwarid", 
+            query ="SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd")
+    , @NamedQuery(name = "Cpm.findStatBetweenAndHardwarid",
+            query ="SELECT SUBSTRING(c.cpmPK.timestamp,1,16), MIN(c.cpm), MAX(c.cpm), AVG(c.cpm) FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd GROUP BY SUBSTRING(c.cpmPK.timestamp,1,16)")    
 })
 public class Cpm implements Serializable {
 
