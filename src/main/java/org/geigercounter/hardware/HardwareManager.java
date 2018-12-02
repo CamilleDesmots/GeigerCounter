@@ -147,7 +147,7 @@ public class HardwareManager implements Serializable {
 
     /**
      *
-     * @return
+     * @return int
      */
     @Lock(LockType.WRITE)
     public int getCPS() {
@@ -158,7 +158,7 @@ public class HardwareManager implements Serializable {
 
     /**
      *
-     * @return
+     * @return String
      */
     @Lock(LockType.WRITE)
     public String getVersion() {

@@ -6,6 +6,9 @@ import org.geigercounter.jsf.util.JsfUtil.PersistAction;
 import org.geigercounter.sessionbean.CpmFacade;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -143,7 +146,7 @@ public class CpmController implements Serializable {
             String values[] = value.split(SEPARATOR_ESCAPED);
             key = new org.geigercounter.entity.CpmPK();
             key.sethardwareid(Short.parseShort(values[0]));
-            key.setTimestamp(java.sql.Date.valueOf(values[1]));
+            key.setTimestamp(LocalDateTime.ofInstant(java.sql.Date.valueOf(values[1]).toInstant(), ZoneOffset.UTC));
             return key;
         }
 

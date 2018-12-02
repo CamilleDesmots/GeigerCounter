@@ -9,3 +9,4 @@
 *.jar
 /target/
 /lib/
+/bin/

@@ -6,6 +6,11 @@
 package org.geigercounter.hardware;
 
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -36,42 +41,46 @@ import org.geigercounter.sessionbean.CpmFacade;
 @SessionScoped
 public class DataSample implements Serializable {
 
-    private static final Logger LOGGER = Logger.getLogger(DataSample.class.getName());
-    private boolean populate;
-
     @Inject
     private CpmController cpmController;
 
     @Inject
     private HardwareController hardwareController;
-    
+
     @Inject
     private CpmFacade cpmFacade;
-   
+
+    private static final Logger LOGGER = Logger.getLogger(DataSample.class.getName());
+    private boolean populate;
+
     public void DataSample() {
         LOGGER.log(Level.INFO, "In the method init");
+
         this.init();
-       
+
     }
-    
+
     @PostConstruct
     public void init() {
         LOGGER.log(Level.INFO, "In the method DataSample");
         //TODO Check in the database if Hardware is empty
-         List<Hardware> listHardware;
+        List<Hardware> listHardware;
         listHardware = hardwareController.getItemsAvailableSelectMany();
-        
+
         // Too much data in table 'Cpm' for retrieving a list of entity...
         EntityManager emCpm = cpmFacade.getEntityManager();
         Query query1 = emCpm.createNamedQuery("Cpm.countAll");
         Long cpmCount = (Long) query1.getSingleResult();
-       
+
         if (listHardware.isEmpty()) {
             this.populate = Boolean.FALSE;
         } else {
-            this.populate = Boolean.TRUE;
+
             LOGGER.log(Level.INFO, "Number of records in 'Hardware' table: {0}", listHardware.size());
             LOGGER.log(Level.INFO, "Number of records in 'Cpm' table: {0}", cpmCount);
+            if (cpmCount > 0) {
+                this.populate = Boolean.TRUE;
+            }
         }
     }
 
@@ -85,12 +94,13 @@ public class DataSample implements Serializable {
         if (this.populate == Boolean.FALSE) {
             this.init();
         }
-        
+
         return this.populate;
     }
 
     /**
      * Populate the database
+     * @param newValue true or false
      */
     public void setPopulate(boolean newValue) {
         /**
@@ -114,27 +124,22 @@ public class DataSample implements Serializable {
         hardwareController.create();
 
         /**
-         * Now we create 2 years of data for every minutes of the past two years
+         * Now we create 1 month of data for every minutes
          */
         //TODO with a random CPM
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.add(Calendar.HOUR, -1);
         // Current time minus one hour
-        Date todayDate = cal.getTime();
-        cal.add(Calendar.MONTH, -2);
-        cal.set(Calendar.DAY_OF_MONTH, 0);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        // Two years ago day.
-        Date beginDate = cal.getTime();
+        LocalDateTime todayDate = LocalDateTime.now();
+
+        LocalDateTime beginDate = LocalDateTime.of(todayDate.getYear(), todayDate.getMonth().minus(1), todayDate.getDayOfMonth(), 0, 0);
 
         Random rand1 = new Random();
         Random rand2 = new Random();
         Integer value1 = 10;
         boolean value2;
 
-        while (beginDate.before(todayDate)) {
+        while (beginDate.isBefore(todayDate)) {
             CpmPK cpmPk = new CpmPK();
             cpmPk.sethardwareid(hardware.getHardwareid());
             cpmPk.setTimestamp(beginDate);
@@ -144,20 +149,25 @@ public class DataSample implements Serializable {
             cpm.setCpmPK(cpmPk);
             //TODO Affect a realistic CPM value randomly obtained
             value2 = rand2.nextBoolean();
-            if (value2 == Boolean.TRUE){
+            if (value2 == Boolean.TRUE) {
                 value1 = value1 + rand1.nextInt(5);
             } else {
                 value1 = value1 - rand1.nextInt(5);
             }
-            
-            if (value1 <= 0){value1 = 10;}
-            
-            if (value1 >= 60 ){value1 = 58;}
-                
+
+            if (value1 <= 0) {
+                value1 = 10;
+            }
+
+            if (value1 >= 60) {
+                value1 = 58;
+            }
+
             cpm.setCpm(value1);
             cpmController.create();
-            cal.add(Calendar.MINUTE, 1);
-            beginDate = cal.getTime();
+
+            beginDate = beginDate.plusMinutes(1);
+
         }
 
     }

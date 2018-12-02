@@ -6,6 +6,10 @@
 package org.geigercounter.entity;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -28,14 +32,14 @@ public class CpmPK implements Serializable {
     @NotNull
     @Column(name = "TIMESTAMP")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;
+    private Date date;
 
     public CpmPK() {
     }
 
-    public CpmPK(short hardwareid, Date timestamp) {
+    public CpmPK(short hardwareid, LocalDateTime newLocalDateTime) {
         this.hardwareid = hardwareid;
-        this.timestamp = timestamp;
+        this.date = Date.from(newLocalDateTime.atZone(ZoneId.of("Z")).toInstant());
     }
 
     public short gethardwareid() {
@@ -46,19 +50,19 @@ public class CpmPK implements Serializable {
         this.hardwareid = hardwareid;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public LocalDateTime getTimestamp() {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.of("Z"));
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestamp(LocalDateTime newLocalDateTime) {
+        this.date = Date.from(newLocalDateTime.toInstant(ZoneOffset.UTC));
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) hardwareid;
-        hash += (timestamp != null ? timestamp.hashCode() : 0);
+        hash += (date != null ? date.hashCode() : 0);
         return hash;
     }
 
@@ -72,7 +76,7 @@ public class CpmPK implements Serializable {
         if (this.hardwareid != other.hardwareid) {
             return false;
         }
-        if ((this.timestamp == null && other.timestamp != null) || (this.timestamp != null && !this.timestamp.equals(other.timestamp))) {
+        if ((this.date == null && other.date != null) || (this.date != null && !this.date.equals(other.date))) {
             return false;
         }
         return true;
@@ -80,7 +84,7 @@ public class CpmPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.geigercounter.entity.CpmPK[ hardwareid=" + hardwareid + ", timestamp=" + timestamp + " ]";
+        return "org.geigercounter.entity.CpmPK[ hardwareid=" + hardwareid + ", timestamp=" + date + " ]";
     }
     
 }

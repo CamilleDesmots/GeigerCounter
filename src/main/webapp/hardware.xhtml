@@ -13,11 +13,11 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./template.xhtml">
-            <ui:define name="title">GQ-GMC Geiger Counter</ui:define>
+            <ui:define name="title">>#{bundle.UITitle}</ui:define>
             <ui:define name="box">
                 <h:panelGrid columns="2" style="margin-bottom:50px" cellpadding="5">
 
-                    <h:outputLabel>Emulation of GQ-GMC320 ?</h:outputLabel>
+                    <h:outputLabel>#{bundle.EmulationYesOrNo}</h:outputLabel>
                     <h:outputLabel>
                         <c:choose>
                             <c:when test="#{hardwareManager.emulation}">

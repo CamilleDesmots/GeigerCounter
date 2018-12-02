@@ -8,6 +8,7 @@
  */
 package org.geigercounter.hardware;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +50,7 @@ public class TimerBeanCPM {
     private TimerHandle timerCpmHandle;
     private String timerCpmInfo;
 
-    private Date lastProgrammaticTimeout;
+    private LocalDateTime lastProgrammaticTimeout;
     private int lastCPM;
 
     private boolean countingEveryMinutes;
@@ -78,8 +79,8 @@ public class TimerBeanCPM {
     @Inject
     private StatelessEntityManipulation statelessEntityManipulation;
 
-    public void TimerBean() {
-        LOGGER.log(Level.INFO, "Instantiate class TimerBean");
+    public void TimerBeanCPM() {
+        LOGGER.log(Level.INFO, "Instantiate class \"{0}\"", TimerBeanCPM.class.getName());
         // By default the counting loop is not started
         this.countingEveryMinutes = Boolean.FALSE;
         this.timerCpmInfo = "Counting CPM every minutes";
@@ -105,10 +106,10 @@ public class TimerBeanCPM {
         //LOGGER.log(Level.INFO, "Programmatic timeout occurred. Timer info : {0}", timer.getInfo().toString());
         LOGGER.log(Level.FINE, "Programmatic timeout occurred. This is the CPM timer.");
 
-        this.lastProgrammaticTimeout = new Date();
+        this.lastProgrammaticTimeout = LocalDateTime.now();
         this.lastCPM = this.hardwareManager.getCPM();
 
-        LOGGER.log(Level.FINE, "New record Cpm sould be hardwareID:{0} Cpm:{1} Timestamp: {2}", new Object[]{this.hardwareId, this.lastCPM, this.lastProgrammaticTimeout});
+        LOGGER.log(Level.FINE, "New record Cpm should be hardwareID:{0} Cpm:{1} Timestamp: {2}", new Object[]{this.hardwareId, this.lastCPM, this.lastProgrammaticTimeout});
 
         statelessEntityManipulation.CreateCpm(this.hardwareId, this.lastProgrammaticTimeout, this.lastCPM);
     }
@@ -124,11 +125,12 @@ public class TimerBeanCPM {
     /**
      * Enable or Disable the loop for counting every minutes.
      *
-     * @param newValue
+     * @param newValue true for counting every minutes, false otherwise
+     * @throws RollbackFailureException If failed do a rollback.
      */
     public void setCountingEveryMinutes(boolean newValue) throws RollbackFailureException {
 
-        LOGGER.log(Level.FINE, "Set countingEveryMinutes from {0 }to {1} ", new Object[]{this.countingEveryMinutes, newValue});
+        LOGGER.log(Level.FINE, "Set countingEveryMinutes from {0} to {1} ", new Object[]{this.countingEveryMinutes, newValue});
         if (this.countingEveryMinutes != newValue) {
             // Either we stop or we start counting
             if (newValue == Boolean.TRUE) {

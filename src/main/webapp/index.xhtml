@@ -11,21 +11,38 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./template.xhtml" >
-            <ui:define name="title">
-                GQ-GMC Geiger CPM
+            <ui:define name="title">#{bundle.UITitle}
             </ui:define>
             <ui:define name="box">
                 <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <h:form>
-                    <p:poll interval="60" update="lastMonthLineChart"/>
-                    <p:chart id="lastMonthLineChart" type="line" model="#{chartViewLastMonthCPM.lineChartModelLastMonth}"/>
-                </h:form>
+<!--                    <h:form>
+                        <p:poll interval="60" update="lastFiveYearsLineChart"/>                       
+                        <p:chart id="lastFiveYearsLineChart" type="line" model="#{chartViewLastFiveYearsCPM.lineChartModel}"/>
+                    </h:form>-->
                 </h:panelGrid>
-                   <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
                     <h:form>
-                    <p:poll interval="3660" update="lastMonthStatisticsLineChart"/>
-                    <p:chart id="lastMonthStatisticsLineChart" type="line" model="#{chartViewLastMonthCPM.lineCharModelStatisticsByHour}"/>
-                </h:form>
+                        <p:poll interval="60" update="lastTwoHoursLineChart"/>                       
+                        <p:chart id="lastTwoHoursLineChart" type="line" model="#{chartViewLastTwoHoursCPM.lineChartModel}"/>
+                    </h:form>
+                </h:panelGrid>
+<!--                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <h:form>
+                        <p:poll interval="60" update="lastWeekLineChart"/>
+                        <p:chart id="lastWeekLineChart" type="line" model="#{chartViewLastWeekCPM.lineChartModel}"/>
+                    </h:form>
+                </h:panelGrid>-->
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <h:form>
+                        <p:poll interval="3600" update="StatisticsChartPerHour"/>
+                        <p:chart id="StatisticsChartPerHour" type="line" model="#{chartViewStatisticsPerHour.lineChartModel}"/>
+                    </h:form>
+                </h:panelGrid>
+                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
+                    <h:form>
+                        <p:poll interval="86400" update="StatisticsChartPerDay"/>
+                        <p:chart id="StatisticsChartPerDay" type="line" model="#{chartViewStatisticsPerDay.lineChartModel}"/>
+                    </h:form>
                 </h:panelGrid>
             </ui:define>
         </ui:composition>

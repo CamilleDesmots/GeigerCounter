@@ -5,7 +5,7 @@
  */
 package org.geigercounter.sessionbean;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +46,7 @@ public class StatelessEntityManipulation {
 
     private static final Logger LOGGER = Logger.getLogger(StatelessEntityManipulation.class.getName());
 
-    public void CreateCpm(Short hardwareId, Date timestamp, Integer cpmValue) {
+    public void CreateCpm(Short hardwareId, LocalDateTime timestamp, Integer cpmValue) {
         LOGGER.log(Level.INFO, "in method CreateCpm");
 
         CpmPK cpmPK1;

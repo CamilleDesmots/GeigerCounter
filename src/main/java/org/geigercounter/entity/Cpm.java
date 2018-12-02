@@ -6,7 +6,7 @@
 package org.geigercounter.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -28,15 +28,17 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Cpm.findByHardwareid", 
             query = "SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid")
     , @NamedQuery(name = "Cpm.findByTimestamp", 
-            query = "SELECT c FROM Cpm c WHERE c.cpmPK.timestamp = :timestamp")
+            query = "SELECT c FROM Cpm c WHERE c.cpmPK.date = :timestamp")
     , @NamedQuery(name = "Cpm.findByCpm", 
             query = "SELECT c FROM Cpm c WHERE c.cpm = :cpm")
     , @NamedQuery(name = "Cpm.countAll", 
             query ="SELECT count(c) FROM Cpm c") 
-    , @NamedQuery(name = "Cpm.findTimestampBetweenAndHardwarid", 
-            query ="SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd")
+    , @NamedQuery(name = "Cpm.findDateBetweenAndHardwarid", 
+            query ="SELECT c FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.date BETWEEN :dateBegin AND :dateEnd")
+    , @NamedQuery(name = "Cpm.findTimestampAndCPMWithTimestampBetweenAndHardwarid", 
+            query ="SELECT c.cpm, c.cpmPK.date FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.date BETWEEN :timestampBegin AND :timestampEnd")
     , @NamedQuery(name = "Cpm.findStatBetweenAndHardwarid",
-            query ="SELECT SUBSTRING(c.cpmPK.timestamp,1,16), MIN(c.cpm), MAX(c.cpm), AVG(c.cpm) FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.timestamp BETWEEN :timestampBegin AND :timestampEnd GROUP BY SUBSTRING(c.cpmPK.timestamp,1,16)")    
+            query ="SELECT SUBSTRING(c.cpmPK.date,1,16), MIN(c.cpm), MAX(c.cpm), AVG(c.cpm) FROM Cpm c WHERE c.cpmPK.hardwareid = :hardwareid and C.cpmPK.date BETWEEN :timestampBegin AND :timestampEnd GROUP BY SUBSTRING(c.cpmPK.date,1,16)")    
 })
 public class Cpm implements Serializable {
 
@@ -53,8 +55,8 @@ public class Cpm implements Serializable {
         this.cpmPK = cpmPK;
     }
 
-    public Cpm(short hardwareid, Date timestamp) {
-        this.cpmPK = new CpmPK(hardwareid, timestamp);
+    public Cpm(short hardwareid, LocalDateTime localDateTime) {
+        this.cpmPK = new CpmPK(hardwareid, localDateTime);
     }
 
     public CpmPK getCpmPK() {
