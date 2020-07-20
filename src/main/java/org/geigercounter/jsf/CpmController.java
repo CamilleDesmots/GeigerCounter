@@ -6,7 +6,6 @@ import org.geigercounter.jsf.util.JsfUtil.PersistAction;
 import org.geigercounter.sessionbean.CpmFacade;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;

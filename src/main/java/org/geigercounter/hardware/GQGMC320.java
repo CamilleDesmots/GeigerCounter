@@ -7,11 +7,9 @@ package org.geigercounter.hardware;
 
 import java.time.LocalDateTime;
 import com.pi4j.io.serial.*;
-import com.pi4j.util.Console;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
 import javax.inject.Named;
 
 /**

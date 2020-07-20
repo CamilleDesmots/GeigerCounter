@@ -1,50 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" 
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui">
     <body>
-        <ui:composition template="./template.xhtml" >
-            <ui:define name="title">#{bundle.UITitle}
-            </ui:define>
+        <ui:composition template="./template.xhtml">
+            <ui:define name="title">>#{bundle.UITitle}</ui:define>
             <ui:define name="box">
-                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-<!--                    <h:form>
-                        <p:poll interval="60" update="lastFiveYearsLineChart"/>                       
-                        <p:chart id="lastFiveYearsLineChart" type="line" model="#{chartViewLastFiveYearsCPM.lineChartModel}"/>
-                    </h:form>-->
+                <h:panelGrid columns="2" style="margin-bottom:50px" cellpadding="5">
+
+                    <h:outputLabel>#{bundle.EmulationYesOrNo}</h:outputLabel>
+                    <h:outputLabel>
+                        <c:choose>
+                            <c:when test="#{hardwareManager.emulation}">
+                                <h:outputLabel>Yes</h:outputLabel>
+                            </c:when>
+                            <c:otherwise><h:outputLabel >No</h:outputLabel></c:otherwise>
+                        </c:choose>
+                    </h:outputLabel>
+
+                    <h:outputLabel>Version :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.version}"/>
+
+                    <h:outputLabel>Revision :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.revision}"/>
+
+                    <h:outputLabel>Serial number :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.serialNumber}"/>
+
+                    <h:outputLabel>Voltage :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.voltage}"/>
+
+                    <h:outputLabel>Temperature :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.temp}"/>
+
+
+                    <h:outputLabel>Last CPS :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.CPS}"/>
+
+                    <h:outputLabel>Last CPM :</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.lastCPM}"/>
+
+                    <h:outputLabel>Last CPM Date:</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.lastCPMDate}"/>
+
+                    <h:outputLabel>Number of CPM requested:</h:outputLabel>
+                    <h:outputLabel escape="false" value="#{hardwareManager.requestedCPM}"/>
                 </h:panelGrid>
-                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <h:form>
-                        <p:poll interval="60" update="lastTwoHoursLineChart"/>                       
-                        <p:chart id="lastTwoHoursLineChart" type="line" model="#{chartViewLastTwoHoursCPM.lineChartModel}"/>
-                    </h:form>
-                </h:panelGrid>
-<!--                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <h:form>
-                        <p:poll interval="60" update="lastWeekLineChart"/>
-                        <p:chart id="lastWeekLineChart" type="line" model="#{chartViewLastWeekCPM.lineChartModel}"/>
-                    </h:form>
-                </h:panelGrid>-->
-                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <h:form>
-                        <p:poll interval="3600" update="StatisticsChartPerHour"/>
-                        <p:chart id="StatisticsChartPerHour" type="line" model="#{chartViewStatisticsPerHour.lineChartModel}"/>
-                    </h:form>
-                </h:panelGrid>
-                <h:panelGrid columns="2" columnClasses="left,right" style="width:100%">
-                    <h:form>
-                        <p:poll interval="86400" update="StatisticsChartPerDay"/>
-                        <p:chart id="StatisticsChartPerDay" type="line" model="#{chartViewStatisticsPerDay.lineChartModel}"/>
-                    </h:form>
-                </h:panelGrid>
+
+                <h:form>
+                    <h:panelGrid columns="2" style="margin-bottom:50px" cellpadding="5">
+
+                        <h:outputLabel for="checkbox1">Counting every minutes CPM ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox1"  label="Counting every minutes CPM ?" value="#{timerBeanCPM.countingEveryMinutes}"/>
+
+                        <h:outputLabel for="checkbox2">Emulation of GQ-GMC320 ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox2"  label="Emulation of GQ-GMC320 ?" value="#{hardwareManager.emulation}"/>
+
+                        <h:outputLabel for="checkbox3">Generate data sample ?</h:outputLabel>
+                        <h:selectBooleanCheckbox id="checkbox3" label="Generate data sample ?" value ="#{dataSample.populate}"/>
+
+                    </h:panelGrid>
+                    <p:commandButton value="Refresh" action="hardware.xhtml?i=2" />
+                </h:form>
             </ui:define>
+
         </ui:composition>
     </body>
 </html>

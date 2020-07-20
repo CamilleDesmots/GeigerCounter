@@ -15,18 +15,10 @@ and open the template in the editor.
     <h:body>
         <div id="top" class="subContainer">
             <p:tabMenu activeIndex="#{param.i}">
-                <p:menuitem value="Compteur" outcome="index.xhtml?i=0" icon="ui-icon-star" >
-                    <ui:param name="i" value="0" />
-                </p:menuitem>
-                <p:menuitem value="Administration" outcome="admin.xhtml?i=1" icon="ui-icon-person" >
+                <p:menuitem value="Administration" outcome="index.xhtml?i=1" icon="ui-icon-wrenc" >
                     <ui:param name="i" value="1" />
                 </p:menuitem>
-                <p:menuitem value="Hardware" outcome="hardware.xhtml?i=2" icon="ui-icon-wrench">
-                    <ui:param name="i" value="2" />
-                </p:menuitem>
-                <p:menuitem value="Log" outcome="log.xhtml?i=3" icon="ui-icon-wrench">
-                    <ui:param name="i" value="3" />
-                </p:menuitem>
+ 
             </p:tabMenu>
         </div>
         <div id="middle" class="subContainer greyBox">

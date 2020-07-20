@@ -6,13 +6,8 @@
 package org.geigercounter.hardware;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
-import java.time.ZoneOffset;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
